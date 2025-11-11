@@ -3,10 +3,10 @@
 ### 1. 도메인
 
 #### 1.1. Position (좌표 값 객체)
-- [ ] x, y 필드 (1~19)
-- [ ] 생성 시 유효성 검증
-- [ ] getAdjacentPositions() - 상하좌우 인접 좌표 반환
-- [ ] equals, hashCode
+- [x] x, y 필드 (1~19)
+- [x] 생성 시 유효성 검증
+- [x] getAdjacentPositions() - 상하좌우 인접 좌표 반환
+- [x] equals, hashCode
 
 #### 1.2. Stone (Enum)
 - [ ] BLACK, WHITE, EMPTY
