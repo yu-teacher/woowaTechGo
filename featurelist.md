@@ -13,12 +13,12 @@
 - [x] opposite() - 반대 색상 반환
 
 #### 1.3. Board (바둑판 상태)
-- [ ] Stone[][] stones (19x19)
-- [ ] getStone(Position) - 특정 좌표의 돌 조회
-- [ ] placeStone(Position, Stone) - 돌 놓기
-- [ ] removeStones(Set<Position>) - 여러 돌 제거
-- [ ] copy() - 바둑판 복사
-- [ ] equals() - 바둑판 상태 비교 (패 규칙용)
+- [x] Stone[][] stones (19x19)
+- [x] getStone(Position) - 특정 좌표의 돌 조회
+- [x] placeStone(Position, Stone) - 돌 놓기
+- [x] removeStones(Set<Position>) - 여러 돌 제거
+- [x] copy() - 바둑판 복사
+- [x] equals() - 바둑판 상태 비교 (패 규칙용)
 
 #### 1.4. Move (착수 기록 값 객체)
 - [ ] moveNumber - 착수 번호
