@@ -9,8 +9,8 @@
 - [x] equals, hashCode
 
 #### 1.2. Stone (Enum)
-- [ ] BLACK, WHITE, EMPTY
-- [ ] opposite() - 반대 색상 반환
+- [x] BLACK, WHITE, EMPTY
+- [x] opposite() - 반대 색상 반환
 
 #### 1.3. Board (바둑판 상태)
 - [ ] Stone[][] stones (19x19)
