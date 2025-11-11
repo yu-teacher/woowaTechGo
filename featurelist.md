@@ -21,11 +21,11 @@
 - [x] equals() - 바둑판 상태 비교 (패 규칙용)
 
 #### 1.4. Move (착수 기록 값 객체)
-- [ ] moveNumber - 착수 번호
-- [ ] position - 착수 위치
-- [ ] color - 놓은 돌 색
-- [ ] capturedPositions - 이 수로 따낸 돌들
-- [ ] 생성자, getter
+- [x] moveNumber - 착수 번호
+- [x] position - 착수 위치
+- [x] color - 놓은 돌 색
+- [x] capturedPositions - 이 수로 따낸 돌들
+- [x] 생성자, getter
 
 #### 1.5. GameState (게임 상태)
 - [ ] Board board
