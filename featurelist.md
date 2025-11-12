@@ -24,7 +24,6 @@
 - [x] moveNumber - 착수 번호
 - [x] position - 착수 위치
 - [x] color - 놓은 돌 색
-- [x] capturedPositions - 이 수로 따낸 돌들
 - [x] 생성자, getter
 
 #### 1.5. GameState (게임 상태)
