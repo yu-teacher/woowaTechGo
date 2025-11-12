@@ -28,11 +28,11 @@
 - [x] 생성자, getter
 
 #### 1.5. GameState (게임 상태)
-- [ ] Board board
-- [ ] Stone currentTurn
-- [ ] int blackCaptures
-- [ ] int whiteCaptures
-- [ ] getter/setter
+- [x] Board board
+- [x] Stone currentTurn
+- [x] int blackCaptures
+- [x] int whiteCaptures
+- [x] getter/setter
 
 #### 1.6. MoveHistory (착수 기록 관리)
 - [ ] List<Move> moves
