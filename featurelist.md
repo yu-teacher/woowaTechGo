@@ -34,12 +34,12 @@
 - [x] getter/setter
 
 #### 1.6. MoveHistory (착수 기록 관리)
-- [ ] List<Move> moves
-- [ ] add(Move) - 착수 추가
-- [ ] removeLast() - 마지막 착수 제거
-- [ ] getLast() - 마지막 착수 조회
-- [ ] getAll() - 전체 착수 기록 조회
-- [ ] isEmpty() - 기록 존재 여부
+- [x] List<Move> moves
+- [x] add(Move) - 착수 추가
+- [x] removeLast() - 마지막 착수 제거
+- [x] getLast() - 마지막 착수 조회
+- [x] getAll() - 전체 착수 기록 조회
+- [x] isEmpty() - 기록 존재 여부
 
 #### 1.7. StoneGroup (그룹 분석 유틸)
 - [ ] findConnectedGroup(Board, Position) - BFS로 연결된 같은 색 그룹 찾기
@@ -63,7 +63,7 @@
 #### 1.10. Game (게임 조립 + 흐름 제어)
 - [ ] GameState state
 - [ ] MoveHistory history
-- [ ] Board previousBoard
+- [ ] List<Board> boardHistory
 - [ ] move(Position) - 착수 처리
 - [ ] undo() - 마지막 수 무르기
 - [ ] getState() - 게임 상태 조회
