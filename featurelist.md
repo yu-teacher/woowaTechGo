@@ -42,9 +42,8 @@
 - [x] isEmpty() - 기록 존재 여부
 
 #### 1.7. StoneGroup (그룹 분석 유틸)
-- [ ] findConnectedGroup(Board, Position) - BFS로 연결된 같은 색 그룹 찾기
-- [ ] countLiberties(Board, Set<Position>) - 그룹의 활로 개수 계산
-- [ ] findDeadGroups(Board, Stone) - 특정 색의 활로 0인 그룹들 찾기
+- [x] findConnectedGroup(Board, Position) - BFS로 연결된 같은 색 그룹 찾기
+- [x] countLiberties(Board, Set<Position>) - 그룹의 활로 개수 계산
 
 #### 1.8. MoveValidator (착수 검증)
 - [ ] validate(Board, Position, Stone, Board previousBoard) - 착수 가능 여부 검증
