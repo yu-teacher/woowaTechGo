@@ -46,11 +46,11 @@
 - [x] countLiberties(Board, Set<Position>) - 그룹의 활로 개수 계산
 
 #### 1.8. MoveValidator (착수 검증)
-- [ ] validate(Board, Position, Stone, Board previousBoard) - 착수 가능 여부 검증
-    - [ ] 좌표 유효성 검증
-    - [ ] 빈 자리 확인
-    - [ ] 자충수 검증 (시뮬레이션 후 활로 확인)
-    - [ ] 패 규칙 검증 (직전 국면과 비교)
+- [x] validate(Board, Position, Stone, Board previousBoard) - 착수 가능 여부 검증
+    - [x] 좌표 유효성 검증
+    - [x] 빈 자리 확인
+    - [x] 자충수 검증 (시뮬레이션 후 활로 확인)
+    - [x] 패 규칙 검증 (직전 국면과 비교)
 
 #### 1.9. CaptureHandler (따내기 처리)
 - [x] execute(Board, Position, Stone) - 따내기 실행
