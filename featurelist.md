@@ -53,11 +53,11 @@
     - [ ] 패 규칙 검증 (직전 국면과 비교)
 
 #### 1.9. CaptureHandler (따내기 처리)
-- [ ] execute(Board, Position, Stone) - 따내기 실행
-    - [ ] 착수한 위치의 인접 상대 그룹들 확인
-    - [ ] 활로 0인 그룹 찾기
-    - [ ] 해당 그룹의 돌들 제거
-    - [ ] 제거된 Position들 반환
+- [x] execute(Board, Position, Stone) - 따내기 실행
+    - [x] 착수한 위치의 인접 상대 그룹들 확인
+    - [x] 활로 0인 그룹 찾기
+    - [x] 해당 그룹의 돌들 제거
+    - [x] 제거된 Position들 반환
 
 #### 1.10. Game (게임 조립 + 흐름 제어)
 - [ ] GameState state
