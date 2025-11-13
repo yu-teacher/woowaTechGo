@@ -60,13 +60,13 @@
     - [x] 제거된 Position들 반환
 
 #### 1.10. Game (게임 조립 + 흐름 제어)
-- [ ] GameState state
-- [ ] MoveHistory history
-- [ ] List<Board> boardHistory
-- [ ] move(Position) - 착수 처리
-- [ ] undo() - 마지막 수 무르기
-- [ ] getState() - 게임 상태 조회
-- [ ] getMoveHistory() - 착수 기록 조회
+- [x] GameState state
+- [x] MoveHistory history
+- [x] List<Board> boardHistory
+- [x] move(Position) - 착수 처리
+- [x] undo() - 마지막 수 무르기
+- [x] getState() - 게임 상태 조회
+- [x] getMoveHistory() - 착수 기록 조회
 
 ---
 
@@ -161,80 +161,3 @@
 - [ ] 새 게임 시작 버튼
 - [ ] 에러 메시지 표시 (toast)
 - [ ] API 통신 (fetch)
-
----
-
-### 7. 테스트
-
-#### 7.1. Position 테스트
-- [ ] 유효한 좌표 생성
-- [ ] 유효하지 않은 좌표 예외
-- [ ] 인접 좌표 계산
-- [ ] equals, hashCode
-
-#### 7.2. Stone 테스트
-- [ ] opposite() 메서드
-
-#### 7.3. Board 테스트
-- [ ] 초기화
-- [ ] 돌 놓기
-- [ ] 돌 제거
-- [ ] 복사
-- [ ] equals
-
-#### 7.4. Move 테스트
-- [ ] 생성자
-- [ ] getter
-
-#### 7.5. GameState 테스트
-- [ ] 초기 상태
-- [ ] getter/setter
-
-#### 7.6. MoveHistory 테스트
-- [ ] 착수 추가
-- [ ] 마지막 착수 제거
-- [ ] 조회 메서드들
-
-#### 7.7. StoneGroup 테스트
-- [ ] 그룹 찾기 (연결된 돌)
-- [ ] 활로 계산
-- [ ] 죽은 그룹 찾기
-
-#### 7.8. MoveValidator 테스트
-- [ ] 좌표 유효성 검증
-- [ ] 빈 자리 확인
-- [ ] 자충수 검증
-- [ ] 패 규칙 검증
-
-#### 7.9. CaptureHandler 테스트
-- [ ] 단일 돌 따내기
-- [ ] 그룹 따내기
-- [ ] 여러 그룹 동시 따내기
-
-#### 7.10. Game 통합 테스트
-- [ ] 정상 착수 시나리오
-- [ ] 따내기 시나리오
-- [ ] 자충수 시나리오
-- [ ] 패 규칙 시나리오
-- [ ] 무르기 시나리오
-
-#### 7.11. GameService 테스트
-- [ ] 새 게임 시작
-- [ ] 착수 처리
-- [ ] 무르기 처리
-- [ ] 상태 조회
-
-#### 7.12. KataGoService 테스트
-- [ ] 블루스팟 요청 (Mocking)
-- [ ] 계가 요청 (Mocking)
-
-#### 7.13. GameController 테스트
-- [ ] POST /api/game/start (MockMvc)
-- [ ] POST /api/game/move (MockMvc)
-- [ ] DELETE /api/game/move (MockMvc)
-- [ ] GET /api/game (MockMvc)
-- [ ] 예외 처리
-
-#### 7.14. KataGoController 테스트
-- [ ] GET /api/katago/bluespots (MockMvc)
-- [ ] GET /api/katago/score (MockMvc)
