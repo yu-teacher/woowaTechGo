@@ -14,7 +14,6 @@ public class Game {
     @Getter
     private final GameState state;
     private final MoveHistory moveHistory;
-    @Getter
     private final List<Board> boardHistory;
 
     /**

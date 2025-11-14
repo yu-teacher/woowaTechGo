@@ -73,12 +73,12 @@
 ### 2. 서비스
 
 #### 2.1. GameService
-- [ ] Game game (싱글톤 인스턴스)
-- [ ] startNewGame() - 새 게임 시작
-- [ ] move(int x, int y) - 착수 요청 처리
-- [ ] undo() - 무르기 처리
-- [ ] getGameState() - 게임 상태 DTO 반환
-- [ ] getMoveHistory() - 착수 기록 반환
+- [x] Game game (싱글톤 인스턴스)
+- [x] startNewGame() - 새 게임 시작
+- [x] move(int x, int y) - 착수 요청 처리
+- [x] undo() - 무르기 처리
+- [x] getGameState() - 게임 상태 DTO 반환
+- [x] getMoveHistory() - 착수 기록 반환
 
 #### 2.2. KataGoService
 - [ ] getBlueSpots() - 착수 추천 요청
@@ -100,7 +100,7 @@
 ### 4. DTO
 
 #### 4.1. 응답 DTO
-- [ ] GameStateResponse - 게임 상태 응답
+- [x] GameStateResponse - 게임 상태 응답
 - [ ] MoveResponse - 착수 결과 응답
 - [ ] BlueSpotsResponse - 착수 추천 응답
 - [ ] ScoreResponse - 계가 결과 응답
