@@ -105,6 +105,7 @@
 - [ ] BlueSpotsResponse - 착수 추천 응답
 - [ ] ScoreResponse - 계가 결과 응답
 - [x] ErrorResponse - 에러 응답
+- [x] MoveDTO - 움직임
 
 #### 4.2. 요청 DTO
 - [x] MoveRequest - 착수 요청 (x, y)
@@ -114,23 +115,23 @@
 ### 5. 컨트롤러
 
 #### 5.1. GameController
-- [ ] POST `/api/game/start` - 새 게임 시작
-- [ ] POST `/api/game/move` - 착수 (RequestBody: x, y)
-- [ ] DELETE `/api/game/move` - 무르기
-- [ ] GET `/api/game` - 게임 상태 조회
-- [ ] GET `/api/game/moves` - 착수 기록 조회
+- [x] POST `/api/game/start` - 새 게임 시작
+- [x] POST `/api/game/move` - 착수 (RequestBody: x, y)
+- [x] DELETE `/api/game/move` - 무르기
+- [x] GET `/api/game` - 게임 상태 조회
+- [x] GET `/api/game/moves` - 착수 기록 조회
 
 #### 5.2. KataGoController
 - [ ] GET `/api/katago/bluespots` - 착수 추천
 - [ ] GET `/api/katago/score` - 계가 결과
 
 #### 5.3. ExceptionHandler
-- [ ] 유효하지 않은 좌표 예외 처리
-- [ ] 이미 돌이 있는 위치 예외 처리
-- [ ] 자충수 예외 처리
-- [ ] 패 규칙 위반 예외 처리
-- [ ] 무를 수 없음 예외 처리
-- [ ] 게임 없음 예외 처리
+- [x] 유효하지 않은 좌표 예외 처리
+- [x] 이미 돌이 있는 위치 예외 처리
+- [x] 자충수 예외 처리
+- [x] 패 규칙 위반 예외 처리
+- [x] 무를 수 없음 예외 처리
+- [x] 게임 없음 예외 처리
 
 ---
 
