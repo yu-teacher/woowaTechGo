@@ -81,8 +81,8 @@
 - [x] getMoveHistory() - 착수 기록 반환
 
 #### 2.2. KataGoService
-- [ ] getBlueSpots() - 착수 추천 요청
-- [ ] getScore() - 계가 요청
+- [x] getBlueSpots() - 착수 추천 요청
+- [x] getScore() - 계가 요청
 
 ---
 
