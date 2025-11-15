@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### logs ###
+gtp_logs/
+
+### Property ###
+application.yml

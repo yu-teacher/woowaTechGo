@@ -89,11 +89,14 @@
 ### 3. 외부 API
 
 #### 3.1. KataGoClient
-- [ ] KataGo API 연결 설정
-- [ ] convertToKataGoFormat(List<Move>) - 착수 기록을 KataGo 형식으로 변환
-- [ ] requestBlueSpots(String gameData) - 착수 추천 요청
-- [ ] requestScore(String gameData) - 계가 요청 (한국 룰, 백 덤 6.5)
-- [ ] 응답 파싱 및 DTO 변환
+- [x] KataGo 프로세스 시작/종료
+- [x] GTP 프로토콜 통신 (sendCommand)
+- [x] 바둑판 설정 (setBoardSize, clearBoard)
+- [x] 착수 입력 (play)
+- [x] 착수 추천 (genmove) - 블루스팟용
+- [x] 점수 계산 (finalScore - kata-raw-nn)
+- [x] YAML 설정 파일로 경로 관리
+- [x] GTP 좌표 변환 유틸 (GtpCoordinateConverter)
 
 ---
 
