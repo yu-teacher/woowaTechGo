@@ -105,8 +105,8 @@
 #### 4.1. 응답 DTO
 - [x] GameStateResponse - 게임 상태 응답
 - [x] MoveResponse - 착수 결과 응답
-- [ ] BlueSpotsResponse - 착수 추천 응답
-- [ ] ScoreResponse - 계가 결과 응답
+- [x] BlueSpotsResponse - 착수 추천 응답
+- [x] ScoreResponse - 계가 결과 응답
 - [x] ErrorResponse - 에러 응답
 - [x] MoveDTO - 움직임
 
