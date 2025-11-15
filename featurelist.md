@@ -125,8 +125,8 @@
 - [x] GET `/api/game/moves` - 착수 기록 조회
 
 #### 5.2. KataGoController
-- [ ] GET `/api/katago/bluespots` - 착수 추천
-- [ ] GET `/api/katago/score` - 계가 결과
+- [x] GET `/api/katago/bluespots` - 착수 추천
+- [x] GET `/api/katago/score` - 계가 결과
 
 #### 5.3. ExceptionHandler
 - [x] 유효하지 않은 좌표 예외 처리
