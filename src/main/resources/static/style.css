@@ -1,0 +1,437 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #FFF8E7 0%, #FFE4B5 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.game-wrapper {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    padding: 32px;
+    max-width: 800px;
+}
+
+.title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #8B4513;
+    margin-bottom: 24px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 게임 정보 영역 */
+.game-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #FFF8DC;
+    border-radius: 8px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.label {
+    font-weight: 600;
+    color: #654321;
+}
+
+.value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #8B4513;
+}
+
+/* 바둑판 */
+.baduk-board {
+    background-color: #D4A574;
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    cursor: crosshair;
+    display: block;
+    margin: 0 auto 24px;
+}
+
+.baduk-board:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* 호버 미리보기 돌 */
+.hover-preview {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+/* 마지막 착수 표시 */
+.last-move-marker {
+    pointer-events: none;
+}
+
+.last-move-marker.on-black {
+    fill: #FF6347;  /* 흑돌 위: 빨간색 */
+}
+
+.last-move-marker.on-white {
+    fill: #FFD700;  /* 백돌 위: 금색 */
+}
+
+/* 추천 착수점 표시 */
+.bluespot {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.6;
+        r: 8;
+    }
+    50% {
+        opacity: 1;
+        r: 10;
+    }
+}
+
+/* 컨트롤 버튼 */
+.controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: #D2691E;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #A0522D;
+}
+
+.btn-secondary {
+    background: #CD853F;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #B8860B;
+}
+
+.btn-info {
+    background: #4682B4;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #5F9EA0;
+}
+
+.btn-warning {
+    background: #FF8C00;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #FFA500;
+}
+
+.btn-success {
+    background: #228B22;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #32CD32;
+}
+
+/* 착수 기록 */
+.move-history {
+    background: #FFFAF0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.move-history h3 {
+    font-size: 1.2rem;
+    color: #654321;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.move-list {
+    max-height: 200px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+}
+
+.move-item {
+    padding: 8px;
+    background: white;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-align: center;
+    border: 1px solid #DDD;
+}
+
+.move-item.black {
+    background: #333;
+    color: white;
+}
+
+.move-item.white {
+    background: #FFF;
+    color: #333;
+    border: 1px solid #999;
+}
+
+/* 토스트 알림 */
+.toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 20px 40px;
+    background: #333;
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    max-width: 600px;
+    min-width: 300px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+    top: 100px;
+}
+
+.toast.error {
+    background: #DC143C;
+}
+
+.toast.success {
+    background: #228B22;
+}
+
+.toast.info {
+    background: #4682B4;
+}
+
+/* 스크롤바 스타일 */
+.move-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.move-list::-webkit-scrollbar-track {
+    background: #F0F0F0;
+    border-radius: 4px;
+}
+
+.move-list::-webkit-scrollbar-thumb {
+    background: #CD853F;
+    border-radius: 4px;
+}
+
+.move-list::-webkit-scrollbar-thumb:hover {
+    background: #A0522D;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .game-wrapper {
+        padding: 16px;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .game-info {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .toast {
+        max-width: calc(100% - 32px);
+        min-width: auto;
+    }
+}
+
+/* 모달 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    border-bottom: 2px solid #F0F0F0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #654321;
+    font-size: 1.5rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #999;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: #F0F0F0;
+    color: #333;
+}
+
+.modal-body {
+    padding: 32px 24px;
+}
+
+.score-result {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #FFF8E7 0%, #FFE4B5 100%);
+    border-radius: 12px;
+    color: #654321;
+}
+
+.score-result.black-win {
+    background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+    color: white;
+}
+
+.score-result.white-win {
+    background: linear-gradient(135deg, #ECF0F1 0%, #BDC3C7 100%);
+    color: #2C3E50;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 2px solid #F0F0F0;
+    display: flex;
+    justify-content: center;
+}
+
+.modal-footer .btn {
+    min-width: 150px;
+}

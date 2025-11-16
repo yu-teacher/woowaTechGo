@@ -1,4 +1,0 @@
-katago:
-  path: C:\Users\yusm1\project\wooteco\katago-v1.16.4-eigenavx2-windows-x64\katago.exe
-  config: C:\Users\yusm1\project\wooteco\katago-v1.16.4-eigenavx2-windows-x64\gtp_config.cfg
-  model: C:\Users\yusm1\project\wooteco\katago-v1.16.4-eigenavx2-windows-x64\kata1-b18c384nbt-s9996604416-d4316597426.bin.gz

@@ -38,6 +38,3 @@ out/
 
 ### logs ###
 gtp_logs/
-
-### Property ###
-application.yml

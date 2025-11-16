@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoowaGo - 바둑 게임</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="game-wrapper">
+        <h1 class="title">WoowaGo 바둑</h1>
+
+        <!-- 게임 정보 영역 -->
+        <div class="game-info">
+            <div class="info-item">
+                <span class="label">현재 차례:</span>
+                <span id="current-turn" class="value">흑</span>
+            </div>
+            <div class="info-item">
+                <span class="label">흑이 딴 돌:</span>
+                <span id="black-captures" class="value">0</span>
+            </div>
+            <div class="info-item">
+                <span class="label">백이 딴 돌:</span>
+                <span id="white-captures" class="value">0</span>
+            </div>
+            <div class="info-item">
+                <span class="label">착수 횟수:</span>
+                <span id="move-count" class="value">0</span>
+            </div>
+        </div>
+
+        <!-- 바둑판 -->
+        <svg id="baduk-board" class="baduk-board"></svg>
+
+        <!-- 컨트롤 버튼 -->
+        <div class="controls">
+            <button id="new-game-btn" class="btn btn-primary">새 게임</button>
+            <button id="undo-btn" class="btn btn-secondary">무르기</button>
+            <button id="recommend-btn" class="btn btn-info">착수 추천</button>
+            <button id="analysis-btn" class="btn btn-warning">형세 판단</button>
+            <button id="score-btn" class="btn btn-success">계가</button>
+        </div>
+
+        <!-- 착수 기록 -->
+        <div class="move-history">
+            <h3>착수 기록</h3>
+            <div id="move-list" class="move-list"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 토스트 알림 -->
+<div id="toast" class="toast"></div>
+
+<!-- 계가 모달 -->
+<div id="score-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>계가 결과</h2>
+            <button class="modal-close" id="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="score-result" class="score-result"></div>
+        </div>
+        <div class="modal-footer">
+            <button id="new-game-from-modal" class="btn btn-primary">새 게임</button>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
