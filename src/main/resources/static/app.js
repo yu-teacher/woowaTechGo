@@ -277,6 +277,10 @@ async function handleUndo() {
 
 // 착수 추천
 async function handleRecommend() {
+    // 로딩 시작
+    recommendBtn.classList.add('loading');
+    recommendBtn.disabled = true;
+
     try {
         const data = await apiCall('/katago/bluespots');
         bluespotPosition = { x: data.x, y: data.y };
@@ -284,27 +288,47 @@ async function handleRecommend() {
         showToast(`추천 위치: (${data.x}, ${data.y})`, 'info');
     } catch (error) {
         console.error('착수 추천 실패:', error);
+    } finally {
+        // 로딩 종료
+        recommendBtn.classList.remove('loading');
+        recommendBtn.disabled = false;
     }
 }
 
 // 형세 판단 (게임 계속)
 async function handleAnalysis() {
+    // 로딩 시작
+    analysisBtn.classList.add('loading');
+    analysisBtn.disabled = true;
+
     try {
         const data = await apiCall('/katago/score');
         const result = formatScoreResult(data.result, '우세');
         showToast(result, 'info');
     } catch (error) {
         console.error('형세 판단 실패:', error);
+    } finally {
+        // 로딩 종료
+        analysisBtn.classList.remove('loading');
+        analysisBtn.disabled = false;
     }
 }
 
 // 계가 (게임 종료 + 모달)
 async function handleScore() {
+    // 로딩 시작
+    scoreBtn.classList.add('loading');
+    scoreBtn.disabled = true;
+
     try {
         const data = await apiCall('/katago/score');
         showScoreModal(data.result);
     } catch (error) {
         console.error('계가 실패:', error);
+    } finally {
+        // 로딩 종료
+        scoreBtn.classList.remove('loading');
+        scoreBtn.disabled = false;
     }
 }
 
