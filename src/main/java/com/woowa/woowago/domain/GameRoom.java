@@ -15,7 +15,7 @@ public class GameRoom {
     private String player1;
     private String player2;
     private final Set<String> spectators;
-    private final Game game;
+    private Game game;
 
     public GameRoom(String roomId) {
         this.roomId = roomId;
@@ -73,5 +73,13 @@ public class GameRoom {
             return "spectator";
         }
         return null;
+    }
+
+    /**
+     * 게임 초기화 (새 게임 시작)
+     * 사용자는 유지하고 게임만 새로 시작
+     */
+    public void resetGame() {
+        this.game = new Game();
     }
 }

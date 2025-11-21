@@ -25,15 +25,23 @@ public class KataGoService {
     }
 
     /**
-     * 착수 추천 (블루스팟)
+     * 착수 추천 (블루스팟) - 싱글플레이어용
      */
     public BlueSpotsResponse getBlueSpots() {
+        Game game = gameService.getGame();
+        return getBlueSpots(game);
+    }
+
+    /**
+     * 착수 추천 (블루스팟) - 멀티플레이어용
+     * @param game 특정 GameRoom의 Game 인스턴스
+     */
+    public BlueSpotsResponse getBlueSpots(Game game) {
         try {
             // KataGo 시작 및 현재 게임 상태 반영
-            syncGameToKataGo();
+            syncGameToKataGo(game);
 
             // 다음 차례 색상
-            Game game = gameService.getGame();
             Stone nextPlayer = game.getState().getCurrentTurn();
             String color = GtpCoordinateConverter.toGtpColor(nextPlayer);
 
@@ -51,12 +59,21 @@ public class KataGoService {
     }
 
     /**
-     * 계가
+     * 계가 - 싱글플레이어용
      */
     public ScoreResponse getScore() {
+        Game game = gameService.getGame();
+        return getScore(game);
+    }
+
+    /**
+     * 계가 - 멀티플레이어용
+     * @param game 특정 GameRoom의 Game 인스턴스
+     */
+    public ScoreResponse getScore(Game game) {
         try {
             // KataGo 시작 및 현재 게임 상태 반영
-            syncGameToKataGo();
+            syncGameToKataGo(game);
 
             // 점수 계산
             String scoreResult = kataGoClient.finalScore();
@@ -64,17 +81,23 @@ public class KataGoService {
             return new ScoreResponse(scoreResult);
 
         } catch (Exception e) {
-            // KataGo 실패 시 간단한 계가로 fallback (TODO: 나중에 구현)
             throw new RuntimeException("계가 실패: " + e.getMessage(), e);
         }
     }
 
     /**
-     * 현재 게임 상태를 KataGo에 동기화
+     * 현재 게임 상태를 KataGo에 동기화 - 싱글플레이어용
      */
     private void syncGameToKataGo() throws IOException, InterruptedException {
         Game game = gameService.getGame();
+        syncGameToKataGo(game);
+    }
 
+    /**
+     * 현재 게임 상태를 KataGo에 동기화 - 멀티플레이어용
+     * @param game 동기화할 Game 인스턴스
+     */
+    private void syncGameToKataGo(Game game) throws IOException, InterruptedException {
         // KataGo 시작
         kataGoClient.start();
         kataGoClient.setBoardSize(19);
@@ -84,7 +107,7 @@ public class KataGoService {
         List<Move> moves = game.getMoveHistory();
         for (Move move : moves) {
             Position pos = move.getPosition();
-            Stone color = move.getColor();  // ← 수정!
+            Stone color = move.getColor();
 
             String gtpColor = GtpCoordinateConverter.toGtpColor(color);
             String gtpPos = GtpCoordinateConverter.toGtpCoordinate(pos);

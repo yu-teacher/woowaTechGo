@@ -170,8 +170,6 @@
 - [x] 형세 판단 기능 - 토스트로 "[백 6.5집 우세]"
 - [x] 계가 모달 - "[백 6.5집 승리]" + 새 게임 버튼
 
----
-
 # 2차 기능 구현 - 웹소켓 멀티플레이어
 
 ## 1. 도메인
@@ -181,6 +179,8 @@
 - [x] addUser(username) - 선착순 자동 배정 (player1 → player2 → spectator)
 - [x] removeUser(username) - 사용자 제거
 - [x] getRole(username) - 역할 반환 (player1/player2/spectator)
+- [x] resetGame() - 게임 초기화 (새 게임 시작)
+
 ---
 
 ## 2. 서비스
@@ -189,7 +189,11 @@
 - [x] Map<String, GameRoom> rooms - 방 목록 관리
 - [x] createOrGetRoom(roomId) - 방 생성 또는 조회
 - [x] joinRoom(roomId, username) - 방 입장 (자동 역할 배정)
-- [x] leaveRoom(roomId, username) - 방 퇴장
+- [x] leaveRoom(roomId, username) - 방 퇴장 (빈 방 자동 삭제)
+
+### 2.2. KataGoService
+- [x] getBlueSpots(Game game) - 멀티플레이어용 착수 추천
+- [x] getScore(Game game) - 멀티플레이어용 계가
 
 ---
 
@@ -198,18 +202,21 @@
 ### 3.1. WebSocketConfig
 - [x] STOMP 엔드포인트 등록 (`/ws-game`)
 - [x] 메시지 브로커 설정 (`/topic`, `/app`)
-- [x] CORS 설정
+- [x] CORS 설정 (`http://localhost:5173`)
+
+### 3.2. WebConfig
+- [x] REST API CORS 설정 (`/api/**` → `http://localhost:5173`)
 
 ---
 
 ## 4. DTO
 
-### 4.1. 요청 DTO
+### 4.1. 요청 DTO (dto/websocket)
 - [x] GameJoinRequest - 게임 입장 (gameId, username)
 - [x] GameMoveRequest - 착수 (gameId, username, x, y)
 - [x] GameActionRequest - 일반 액션 (gameId, username)
 
-### 4.2. 응답 DTO
+### 4.2. 응답 DTO (dto/websocket)
 - [x] RoleResponse - 역할 응답 (role)
 - [x] GameMessage - 게임 메시지 (type, data, username)
 
@@ -218,10 +225,9 @@
 ## 5. 컨트롤러
 
 ### 5.1. GameWebSocketController
-- [ ] `@MessageMapping("/game.join")` - 입장 및 역할 배정
-- [ ] `@MessageMapping("/game.start")` - 새 게임 시작 (참가자만)
-- [ ] `@MessageMapping("/game.move")` - 착수 (권한/차례 체크)
-- [ ] `@MessageMapping("/game.undo")` - 무르기 (참가자만)
-- [ ] `@MessageMapping("/game.recommend")` - 착수 추천
-- [ ] `@MessageMapping("/game.score")` - 계가
-- [ ] `@MessageMapping("/game.leave")` - 퇴장 처리
+- [x] `@MessageMapping("/game/join")` - 입장 및 역할 배정
+- [x] `@MessageMapping("/game/start")` - 새 게임 시작 (참가자만)
+- [x] `@MessageMapping("/game/move")` - 착수 (권한 체크)
+- [x] `@MessageMapping("/game/undo")` - 무르기 (참가자만)
+- [x] `@MessageMapping("/game/score")` - 계가 (KataGo 연동, 모두에게 브로드캐스트)
+- [x] `@MessageMapping("/game/leave")` - 퇴장 처리
