@@ -2,6 +2,9 @@ spring:
   application:
     name: woowago
 
+server:
+  port: 8081
+
 katago:
   path: C:\Users\yusm1\project\wooteco\katago-v1.16.4-eigenavx2-windows-x64\katago.exe
   config: C:\Users\yusm1\project\wooteco\katago-v1.16.4-eigenavx2-windows-x64\gtp_config.cfg
