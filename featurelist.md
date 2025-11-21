@@ -177,13 +177,10 @@
 ## 1. 도메인
 
 ### 1.1. GameRoom
-- [ ] roomId, player1, player2, spectators, game 필드
-- [ ] addPlayer(username) - 선착순 참가자 배정 (최대 2명)
-- [ ] addSpectator(username) - 관전자 추가
-- [ ] removeUser(username) - 사용자 제거
-- [ ] getRole(username) - 역할 반환 (player1/player2/spectator)
-- [ ] isPlayerTurn(username, currentTurn) - 본인 차례 확인
-
+- [x] roomId, player1, player2, spectators, game 필드
+- [x] addUser(username) - 선착순 자동 배정 (player1 → player2 → spectator)
+- [x] removeUser(username) - 사용자 제거
+- [x] getRole(username) - 역할 반환 (player1/player2/spectator)
 ---
 
 ## 2. 서비스
