@@ -249,15 +249,15 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 - [x] equals/hashCode 구현
 
 ### 1.2. Participants (Collection Domain)
-- [ ] player1: Participant 필드
-- [ ] player2: Participant 필드
-- [ ] spectators: Set<Participant> 필드
-- [ ] add(username) - 역할 자동 배정
-- [ ] remove(username) - 사용자 제거
-- [ ] getRole(username) - 역할 조회
-- [ ] isReady() - 2명 모였는지 확인
-- [ ] validatePlayerPermission(username) - 참가자 권한 검증
-- [ ] getPlayer1Username(), getPlayer2Username() - username 조회
+- [x] player1: Participant 필드
+- [x] player2: Participant 필드
+- [x] spectators: Set<Participant> 필드
+- [x] add(username) - 역할 자동 배정
+- [x] remove(username) - 사용자 제거
+- [x] getRole(username) - 역할 조회
+- [x] isReady() - 2명 모였는지 확인
+- [x] validatePlayerPermission(username) - 참가자 권한 검증
+- [x] getPlayer1Username(), getPlayer2Username() - username 조회
 
 ### 1.3. GameSettings (외적 룰)
 - [ ] blackPlayer: String 필드
