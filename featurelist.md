@@ -170,3 +170,61 @@
 - [x] 형세 판단 기능 - 토스트로 "[백 6.5집 우세]"
 - [x] 계가 모달 - "[백 6.5집 승리]" + 새 게임 버튼
 
+---
+
+# 2차 기능 구현 - 웹소켓 멀티플레이어
+
+## 1. 도메인
+
+### 1.1. GameRoom
+- [ ] roomId, player1, player2, spectators, game 필드
+- [ ] addPlayer(username) - 선착순 참가자 배정 (최대 2명)
+- [ ] addSpectator(username) - 관전자 추가
+- [ ] removeUser(username) - 사용자 제거
+- [ ] getRole(username) - 역할 반환 (player1/player2/spectator)
+- [ ] isPlayerTurn(username, currentTurn) - 본인 차례 확인
+
+---
+
+## 2. 서비스
+
+### 2.1. GameRoomService
+- [ ] Map<String, GameRoom> rooms - 방 목록 관리
+- [ ] createOrGetRoom(roomId) - 방 생성 또는 조회
+- [ ] joinRoom(roomId, username) - 방 입장 (자동 역할 배정)
+- [ ] leaveRoom(roomId, username) - 방 퇴장
+
+---
+
+## 3. 설정
+
+### 3.1. WebSocketConfig
+- [ ] STOMP 엔드포인트 등록 (`/ws-game`)
+- [ ] 메시지 브로커 설정 (`/topic`, `/app`)
+- [ ] CORS 설정
+
+---
+
+## 4. DTO
+
+### 4.1. 요청 DTO
+- [ ] GameJoinRequest - 게임 입장 (gameId, username)
+- [ ] GameMoveRequest - 착수 (gameId, username, x, y)
+- [ ] GameActionRequest - 일반 액션 (gameId, username)
+
+### 4.2. 응답 DTO
+- [ ] RoleResponse - 역할 응답 (role)
+- [ ] GameMessage - 게임 메시지 (type, data, username)
+
+---
+
+## 5. 컨트롤러
+
+### 5.1. GameWebSocketController
+- [ ] `@MessageMapping("/game.join")` - 입장 및 역할 배정
+- [ ] `@MessageMapping("/game.start")` - 새 게임 시작 (참가자만)
+- [ ] `@MessageMapping("/game.move")` - 착수 (권한/차례 체크)
+- [ ] `@MessageMapping("/game.undo")` - 무르기 (참가자만)
+- [ ] `@MessageMapping("/game.recommend")` - 착수 추천
+- [ ] `@MessageMapping("/game.score")` - 계가
+- [ ] `@MessageMapping("/game.leave")` - 퇴장 처리
