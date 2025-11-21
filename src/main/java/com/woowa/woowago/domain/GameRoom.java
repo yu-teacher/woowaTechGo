@@ -16,6 +16,7 @@ public class GameRoom {
     private String player2;
     private final Set<String> spectators;
     private Game game;
+    private boolean gameStarted = false;
 
     public GameRoom(String roomId) {
         this.roomId = roomId;
@@ -82,4 +83,19 @@ public class GameRoom {
     public void resetGame() {
         this.game = new Game();
     }
+
+    /**
+     * 게임 준비 완료 여부 (player1, player2 모두 있음)
+     */
+    public boolean isReady() {
+        return player1 != null && player2 != null && !gameStarted;
+    }
+
+    /**
+     * 게임 시작
+     */
+    public void startGame() {
+        this.gameStarted = true;
+    }
+
 }

@@ -231,3 +231,116 @@
 - [x] `@MessageMapping("/game/undo")` - 무르기 (참가자만)
 - [x] `@MessageMapping("/game/score")` - 계가 (KataGo 연동, 모두에게 브로드캐스트)
 - [x] `@MessageMapping("/game/leave")` - 퇴장 처리
+
+# 1차 리팩토링 - 도메인 중심 설계
+
+## 목표
+Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책임 분리
+
+---
+
+## 1. 새로운 도메인 객체 생성
+
+### 1.1. Participant (Value Object)
+- [ ] username 필드
+- [ ] ParticipantRole enum (PLAYER1, PLAYER2, SPECTATOR)
+- [ ] isPlayer() - 참가자인지 확인
+- [ ] isSpectator() - 관전자인지 확인
+- [ ] equals/hashCode 구현
+
+### 1.2. Participants (Collection Domain)
+- [ ] player1: Participant 필드
+- [ ] player2: Participant 필드
+- [ ] spectators: Set<Participant> 필드
+- [ ] add(username) - 역할 자동 배정
+- [ ] remove(username) - 사용자 제거
+- [ ] getRole(username) - 역할 조회
+- [ ] isReady() - 2명 모였는지 확인
+- [ ] validatePlayerPermission(username) - 참가자 권한 검증
+- [ ] getPlayer1Username(), getPlayer2Username() - username 조회
+
+### 1.3. GameSettings (외적 룰)
+- [ ] blackPlayer: String 필드
+- [ ] whitePlayer: String 필드
+- [ ] assigned: boolean 필드
+- [ ] assignColors(player1, player2) - 흑/백 랜덤 배정
+- [ ] validateAssigned() - 배정 여부 확인
+- [ ] isMyTurn(username, currentTurn) - 내 차례 확인
+- [ ] getBlackPlayer(), getWhitePlayer() - getter
+
+---
+
+## 2. GameRoom 리팩토링
+
+### 2.1. 필드 변경
+- [ ] ~~player1, player2, spectators~~ → Participants로 통합
+- [ ] GameSettings 필드 추가
+- [ ] ~~gameStarted~~ → started로 네이밍 통일
+
+### 2.2. 도메인 로직 추가
+- [ ] validateExists() - 방 존재 확인
+- [ ] validateCanStart() - 게임 시작 가능 여부 검증
+- [ ] start(username) - 게임 시작 (검증 + 색상 배정 + 초기화)
+- [ ] move(username, position) - 착수 (권한 + 차례 검증)
+- [ ] undo(username) - 무르기 (권한 검증)
+- [ ] isMyTurn(username) - 내 차례인지 확인
+
+### 2.3. 기존 메서드 수정
+- [ ] addUser() → participants.add()로 위임
+- [ ] removeUser() → participants.remove()로 위임
+- [ ] getRole() → participants.getRole()로 위임
+- [ ] isReady() → participants.isReady()로 위임
+
+---
+
+## 3. Converter 클래스 생성
+
+### 3.1. GameStateConverter
+- [ ] from(Game game) → GameStateResponse 정적 팩토리 메서드
+- [ ] convertBoardToArray(Game game) - Board 변환 로직
+
+---
+
+## 4. DTO 리팩토링
+
+### 4.1. JoinResponse
+- [x] 정적 팩토리 메서드 from(room, gameState, role)
+
+### 4.2. StartResponse
+- [x] 정적 팩토리 메서드 from(room, gameState, blackPlayer, whitePlayer)
+- [ ] GameSettings에서 흑/백 정보 가져오도록 수정
+
+---
+
+## 5. GameRoomService 리팩토링
+
+### 5.1. 비즈니스 로직 추가
+- [ ] join(gameId, username) → JoinResponse 반환
+- [ ] start(gameId, username) → StartResponse 반환
+- [ ] move(gameId, username, x, y) → GameStateResponse 반환
+- [ ] undo(gameId, username) → GameStateResponse 반환
+- [ ] score(gameId) → ScoreResponse 반환
+
+### 5.2. 검증 로직
+- [ ] getRoomOrThrow(gameId) - 방 조회 + 예외 처리
+
+---
+
+## 6. GameWebSocketController 단순화
+
+### 6.1. 각 메서드 리팩토링
+- [ ] joinGame() - Service 호출만
+- [ ] startNewGame() - Service 호출만
+- [ ] makeMove() - Service 호출만
+- [ ] undo() - Service 호출만
+- [ ] calculateScore() - Service 호출만
+- [ ] leaveGame() - Service 호출만
+
+### 6.2. 제거할 메서드
+- [ ] ~~buildGameStateResponse()~~ → GameStateConverter로 이동
+- [ ] ~~convertBoardToArray()~~ → GameStateConverter로 이동
+
+### 6.3. 유지할 메서드
+- [ ] broadcastToRoom() - 메시지 전송
+- [ ] sendError() - 에러 전송 (GlobalExceptionHandler로 나중에 이동)
+

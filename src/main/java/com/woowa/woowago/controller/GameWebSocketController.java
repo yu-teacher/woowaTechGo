@@ -34,9 +34,10 @@ public class GameWebSocketController {
             String role = roomService.joinRoom(request.getGameId(), request.getUsername());
             GameRoom room = roomService.getRoom(request.getGameId());
 
-            // 방 전체에 입장 알림 + 게임 상태 전송
             GameStateResponse gameState = buildGameStateResponse(room.getGame());
-            GameMessage message = new GameMessage("JOIN", gameState, request.getUsername());
+            JoinResponse joinResponse = JoinResponse.from(room, gameState, role);
+
+            GameMessage message = new GameMessage("JOIN", joinResponse, request.getUsername());
 
             broadcastToRoom(request.getGameId(), message);
 
@@ -57,6 +58,11 @@ public class GameWebSocketController {
                 throw new IllegalStateException("게임 방을 찾을 수 없습니다.");
             }
 
+            // 참가자 2명이 있는지 확인
+            if (room.getPlayer1() == null || room.getPlayer2() == null) {
+                throw new IllegalArgumentException("참가자가 2명이어야 게임을 시작할 수 있습니다.");
+            }
+
             // 참가자만 시작 가능
             String role = room.getRole(request.getUsername());
             if (!"player1".equals(role) && !"player2".equals(role)) {
@@ -65,9 +71,14 @@ public class GameWebSocketController {
 
             // 게임 초기화
             room.resetGame();
+            room.startGame();
 
             GameStateResponse gameState = buildGameStateResponse(room.getGame());
-            GameMessage message = new GameMessage("START", gameState, request.getUsername());
+
+            // TODO: 흑/백 랜덤 배정은 나중에 추가
+            StartResponse startResponse = StartResponse.from(room, gameState, null, null);
+
+            GameMessage message = new GameMessage("START", startResponse, request.getUsername());
 
             broadcastToRoom(request.getGameId(), message);
 
@@ -193,14 +204,17 @@ public class GameWebSocketController {
 
     /**
      * Board를 2차원 배열로 변환
+     * EMPTY는 null로 변환
      */
     private Stone[][] convertBoardToArray(Game game) {
         Stone[][] boardArray = new Stone[19][19];
         for (int x = 1; x <= 19; x++) {
             for (int y = 1; y <= 19; y++) {
-                boardArray[x - 1][y - 1] = game.getState()
+                Stone stone = game.getState()
                         .getBoard()
                         .getStone(new Position(x, y));
+                // EMPTY는 null로 변환
+                boardArray[x - 1][y - 1] = (stone == Stone.EMPTY) ? null : stone;
             }
         }
         return boardArray;
