@@ -1,6 +1,5 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.capture;
 
-import com.woowa.woowago.domain.capture.CaptureHandler;
 import com.woowa.woowago.domain.game.Board;
 import com.woowa.woowago.domain.game.Position;
 import com.woowa.woowago.domain.game.Stone;

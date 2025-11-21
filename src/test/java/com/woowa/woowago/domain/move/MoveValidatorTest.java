@@ -1,9 +1,8 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.move;
 
 import com.woowa.woowago.domain.game.Board;
 import com.woowa.woowago.domain.game.Position;
 import com.woowa.woowago.domain.game.Stone;
-import com.woowa.woowago.domain.move.MoveValidator;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;

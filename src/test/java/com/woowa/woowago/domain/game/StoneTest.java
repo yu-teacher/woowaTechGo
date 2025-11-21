@@ -1,6 +1,5 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.game;
 
-import com.woowa.woowago.domain.game.Stone;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

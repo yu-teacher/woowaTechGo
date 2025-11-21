@@ -1,7 +1,5 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.room;
 
-import com.woowa.woowago.domain.room.Participant;
-import com.woowa.woowago.domain.room.ParticipantRole;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

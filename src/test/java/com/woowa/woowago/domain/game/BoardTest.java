@@ -1,8 +1,5 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.game;
 
-import com.woowa.woowago.domain.game.Board;
-import com.woowa.woowago.domain.game.Position;
-import com.woowa.woowago.domain.game.Stone;
 import org.junit.jupiter.api.Test;
 import java.util.Set;
 
