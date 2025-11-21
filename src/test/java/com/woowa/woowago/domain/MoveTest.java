@@ -1,5 +1,8 @@
 package com.woowa.woowago.domain;
 
+import com.woowa.woowago.domain.game.Position;
+import com.woowa.woowago.domain.game.Stone;
+import com.woowa.woowago.domain.move.Move;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

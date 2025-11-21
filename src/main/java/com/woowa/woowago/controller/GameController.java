@@ -1,6 +1,6 @@
 package com.woowa.woowago.controller;
 
-import com.woowa.woowago.domain.Move;
+import com.woowa.woowago.domain.move.Move;
 import com.woowa.woowago.dto.GameStateResponse;
 import com.woowa.woowago.dto.MoveDto;
 import com.woowa.woowago.dto.MoveRequest;

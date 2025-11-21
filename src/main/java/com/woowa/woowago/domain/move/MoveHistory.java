@@ -1,4 +1,4 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.move;
 
 import java.util.ArrayList;
 import java.util.Collections;

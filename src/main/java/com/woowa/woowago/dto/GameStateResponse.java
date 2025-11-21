@@ -1,6 +1,6 @@
 package com.woowa.woowago.dto;
 
-import com.woowa.woowago.domain.Stone;
+import com.woowa.woowago.domain.game.Stone;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

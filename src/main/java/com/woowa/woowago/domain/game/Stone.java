@@ -1,4 +1,4 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.game;
 
 public enum Stone {
     BLACK,

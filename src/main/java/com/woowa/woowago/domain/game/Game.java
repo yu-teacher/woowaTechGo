@@ -1,5 +1,9 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.game;
 
+import com.woowa.woowago.domain.capture.CaptureHandler;
+import com.woowa.woowago.domain.move.Move;
+import com.woowa.woowago.domain.move.MoveHistory;
+import com.woowa.woowago.domain.move.MoveValidator;
 import lombok.Getter;
 
 import java.util.ArrayList;

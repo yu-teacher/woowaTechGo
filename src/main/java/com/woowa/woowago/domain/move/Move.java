@@ -1,8 +1,8 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.move;
 
+import com.woowa.woowago.domain.game.Position;
+import com.woowa.woowago.domain.game.Stone;
 import lombok.Getter;
-
-import java.util.Set;
 
 @Getter
 public class Move {

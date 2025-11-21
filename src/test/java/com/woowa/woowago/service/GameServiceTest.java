@@ -1,7 +1,7 @@
 package com.woowa.woowago.service;
 
-import com.woowa.woowago.domain.Move;
-import com.woowa.woowago.domain.Stone;
+import com.woowa.woowago.domain.move.Move;
+import com.woowa.woowago.domain.game.Stone;
 import com.woowa.woowago.dto.GameStateResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

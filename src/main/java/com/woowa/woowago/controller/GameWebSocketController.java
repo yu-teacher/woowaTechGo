@@ -1,6 +1,9 @@
 package com.woowa.woowago.controller;
 
 import com.woowa.woowago.domain.*;
+import com.woowa.woowago.domain.game.Game;
+import com.woowa.woowago.domain.game.Position;
+import com.woowa.woowago.domain.game.Stone;
 import com.woowa.woowago.dto.ErrorResponse;
 import com.woowa.woowago.dto.GameStateResponse;
 import com.woowa.woowago.dto.ScoreResponse;

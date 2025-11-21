@@ -1,8 +1,8 @@
 package com.woowa.woowago.service;
-import com.woowa.woowago.domain.Game;
-import com.woowa.woowago.domain.Move;
-import com.woowa.woowago.domain.Position;
-import com.woowa.woowago.domain.Stone;
+import com.woowa.woowago.domain.game.Game;
+import com.woowa.woowago.domain.move.Move;
+import com.woowa.woowago.domain.game.Position;
+import com.woowa.woowago.domain.game.Stone;
 import com.woowa.woowago.dto.GameStateResponse;
 import org.springframework.stereotype.Service;
 

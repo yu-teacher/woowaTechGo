@@ -1,4 +1,4 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.game;
 
 import java.util.Arrays;
 import java.util.Set;

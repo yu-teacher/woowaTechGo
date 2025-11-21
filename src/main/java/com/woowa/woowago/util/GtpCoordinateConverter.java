@@ -1,6 +1,7 @@
 package com.woowa.woowago.util;
 
-import com.woowa.woowago.domain.Position;
+import com.woowa.woowago.domain.game.Position;
+import com.woowa.woowago.domain.game.Stone;
 
 /**
  * GTP 좌표 변환 유틸리티
@@ -72,7 +73,7 @@ public class GtpCoordinateConverter {
      * @param color Stone (BLACK 또는 WHITE)
      * @return "B" 또는 "W"
      */
-    public static String toGtpColor(com.woowa.woowago.domain.Stone color) {
+    public static String toGtpColor(Stone color) {
         return switch (color) {
             case BLACK -> "B";
             case WHITE -> "W";

@@ -1,5 +1,6 @@
 package com.woowa.woowago.domain;
 
+import com.woowa.woowago.domain.game.Game;
 import lombok.Getter;
 
 import java.util.HashSet;

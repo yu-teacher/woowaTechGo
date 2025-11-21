@@ -1,7 +1,7 @@
 package com.woowa.woowago.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowa.woowago.domain.Stone;
+import com.woowa.woowago.domain.game.Stone;
 import com.woowa.woowago.dto.GameStateResponse;
 import com.woowa.woowago.dto.MoveRequest;
 import com.woowa.woowago.service.GameService;

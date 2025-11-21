@@ -1,6 +1,6 @@
 package com.woowa.woowago.dto;
 
-import com.woowa.woowago.domain.Move;
+import com.woowa.woowago.domain.move.Move;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
