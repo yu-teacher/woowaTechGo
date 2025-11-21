@@ -205,13 +205,13 @@
 ## 4. DTO
 
 ### 4.1. 요청 DTO
-- [ ] GameJoinRequest - 게임 입장 (gameId, username)
-- [ ] GameMoveRequest - 착수 (gameId, username, x, y)
-- [ ] GameActionRequest - 일반 액션 (gameId, username)
+- [x] GameJoinRequest - 게임 입장 (gameId, username)
+- [x] GameMoveRequest - 착수 (gameId, username, x, y)
+- [x] GameActionRequest - 일반 액션 (gameId, username)
 
 ### 4.2. 응답 DTO
-- [ ] RoleResponse - 역할 응답 (role)
-- [ ] GameMessage - 게임 메시지 (type, data, username)
+- [x] RoleResponse - 역할 응답 (role)
+- [x] GameMessage - 게임 메시지 (type, data, username)
 
 ---
 
