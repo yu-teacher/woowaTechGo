@@ -242,11 +242,11 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 1. 새로운 도메인 객체 생성
 
 ### 1.1. Participant (Value Object)
-- [ ] username 필드
-- [ ] ParticipantRole enum (PLAYER1, PLAYER2, SPECTATOR)
-- [ ] isPlayer() - 참가자인지 확인
-- [ ] isSpectator() - 관전자인지 확인
-- [ ] equals/hashCode 구현
+- [x] username 필드
+- [x] ParticipantRole enum (PLAYER1, PLAYER2, SPECTATOR)
+- [x] isPlayer() - 참가자인지 확인
+- [x] isSpectator() - 관전자인지 확인
+- [x] equals/hashCode 구현
 
 ### 1.2. Participants (Collection Domain)
 - [ ] player1: Participant 필드

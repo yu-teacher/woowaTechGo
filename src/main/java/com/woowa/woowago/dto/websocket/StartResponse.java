@@ -1,6 +1,6 @@
 package com.woowa.woowago.dto.websocket;
 
-import com.woowa.woowago.domain.GameRoom;
+import com.woowa.woowago.domain.room.GameRoom;
 import com.woowa.woowago.dto.GameStateResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

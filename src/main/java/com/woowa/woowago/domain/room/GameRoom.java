@@ -1,4 +1,4 @@
-package com.woowa.woowago.domain;
+package com.woowa.woowago.domain.room;
 
 import com.woowa.woowago.domain.game.Game;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.woowa.woowago.service;
 
-import com.woowa.woowago.domain.GameRoom;
+import com.woowa.woowago.domain.room.GameRoom;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
