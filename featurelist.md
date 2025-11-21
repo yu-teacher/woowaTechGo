@@ -186,10 +186,10 @@
 ## 2. 서비스
 
 ### 2.1. GameRoomService
-- [ ] Map<String, GameRoom> rooms - 방 목록 관리
-- [ ] createOrGetRoom(roomId) - 방 생성 또는 조회
-- [ ] joinRoom(roomId, username) - 방 입장 (자동 역할 배정)
-- [ ] leaveRoom(roomId, username) - 방 퇴장
+- [x] Map<String, GameRoom> rooms - 방 목록 관리
+- [x] createOrGetRoom(roomId) - 방 생성 또는 조회
+- [x] joinRoom(roomId, username) - 방 입장 (자동 역할 배정)
+- [x] leaveRoom(roomId, username) - 방 퇴장
 
 ---
 
