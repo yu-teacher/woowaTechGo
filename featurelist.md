@@ -196,9 +196,9 @@
 ## 3. 설정
 
 ### 3.1. WebSocketConfig
-- [ ] STOMP 엔드포인트 등록 (`/ws-game`)
-- [ ] 메시지 브로커 설정 (`/topic`, `/app`)
-- [ ] CORS 설정
+- [x] STOMP 엔드포인트 등록 (`/ws-game`)
+- [x] 메시지 브로커 설정 (`/topic`, `/app`)
+- [x] CORS 설정
 
 ---
 
