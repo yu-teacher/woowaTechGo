@@ -34,7 +34,7 @@ public class KataGoController {
      * GET /api/katago/bluespots/{gameId}
      */
     @GetMapping("/bluespots/{gameId}")
-    public ResponseEntity<BlueSpotsResponse> getBlueSpotsForGame(@PathVariable String gameId) {
+    public ResponseEntity<BlueSpotsResponse> getBlueSpotsForGame(@PathVariable("gameId") String gameId) {
         BlueSpotsResponse response = gameRoomService.blueSpots(gameId);
         return ResponseEntity.ok(response);
     }
@@ -54,7 +54,7 @@ public class KataGoController {
      * GET /api/katago/score/{gameId}
      */
     @GetMapping("/score/{gameId}")
-    public ResponseEntity<ScoreResponse> getScoreForGame(@PathVariable String gameId) {
+    public ResponseEntity<ScoreResponse> getScoreForGame(@PathVariable("gameId") String gameId) {
         ScoreResponse response = gameRoomService.score(gameId);
         return ResponseEntity.ok(response);
     }
