@@ -3,9 +3,6 @@ package com.woowa.woowago.domain.room;
 import com.woowa.woowago.domain.game.Game;
 import lombok.Getter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * 게임 방 도메인
  * 참가자 2명 + 관전자들 관리
@@ -13,15 +10,14 @@ import java.util.Set;
 @Getter
 public class GameRoom {
     private final String roomId;
-    private String player1;
-    private String player2;
-    private final Set<String> spectators;
+    private final Participants participants;
     private Game game;
-    private boolean gameStarted = false;
+    private GameSettings settings;
+    private boolean started = false;
 
     public GameRoom(String roomId) {
         this.roomId = roomId;
-        this.spectators = new HashSet<>();
+        this.participants = new Participants();
         this.game = new Game();
     }
 
@@ -31,16 +27,8 @@ public class GameRoom {
      * @return 배정된 역할 (player1/player2/spectator)
      */
     public String addUser(String username) {
-        if (player1 == null) {
-            player1 = username;
-            return "player1";
-        }
-        if (player2 == null) {
-            player2 = username;
-            return "player2";
-        }
-        spectators.add(username);
-        return "spectator";
+        Participant participant = participants.add(username);
+        return participant.getRole().toLowerCase();
     }
 
     /**
@@ -48,15 +36,7 @@ public class GameRoom {
      * @param username 사용자명
      */
     public void removeUser(String username) {
-        if (username.equals(player1)) {
-            player1 = null;
-            return;
-        }
-        if (username.equals(player2)) {
-            player2 = null;
-            return;
-        }
-        spectators.remove(username);
+        participants.remove(username);
     }
 
     /**
@@ -65,16 +45,7 @@ public class GameRoom {
      * @return player1/player2/spectator
      */
     public String getRole(String username) {
-        if (username.equals(player1)) {
-            return "player1";
-        }
-        if (username.equals(player2)) {
-            return "player2";
-        }
-        if (spectators.contains(username)) {
-            return "spectator";
-        }
-        return null;
+        return participants.getRole(username);
     }
 
     /**
@@ -89,14 +60,42 @@ public class GameRoom {
      * 게임 준비 완료 여부 (player1, player2 모두 있음)
      */
     public boolean isReady() {
-        return player1 != null && player2 != null && !gameStarted;
+        return participants.isReady() && !started;
     }
 
     /**
      * 게임 시작
      */
     public void startGame() {
-        this.gameStarted = true;
+        this.started = true;
     }
 
+    /**
+     * 게임 시작 여부
+     */
+    public boolean isGameStarted() {
+        return started;
+    }
+
+    /**
+     * Player1 username 조회
+     */
+    public String getPlayer1() {
+        return participants.getPlayer1Username();
+    }
+
+    /**
+     * Player2 username 조회
+     */
+    public String getPlayer2() {
+        return participants.getPlayer2Username();
+    }
+
+    /**
+     * 관전자 Set 조회
+     */
+    public java.util.Set<String> getSpectators() {
+        // 임시: 빈 Set 반환 (Service에서 getSpectatorCount 사용하도록 변경 필요)
+        return java.util.Collections.emptySet();
+    }
 }

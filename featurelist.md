@@ -273,9 +273,9 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 2. GameRoom 리팩토링
 
 ### 2.1. 필드 변경
-- [ ] ~~player1, player2, spectators~~ → Participants로 통합
-- [ ] GameSettings 필드 추가
-- [ ] ~~gameStarted~~ → started로 네이밍 통일
+- [x] ~~player1, player2, spectators~~ → Participants로 통합
+- [x] GameSettings 필드 추가
+- [x] ~~gameStarted~~ → started로 네이밍 통일
 
 ### 2.2. 도메인 로직 추가
 - [ ] validateExists() - 방 존재 확인
