@@ -260,13 +260,13 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 - [x] getPlayer1Username(), getPlayer2Username() - username 조회
 
 ### 1.3. GameSettings (외적 룰)
-- [ ] blackPlayer: String 필드
-- [ ] whitePlayer: String 필드
-- [ ] assigned: boolean 필드
-- [ ] assignColors(player1, player2) - 흑/백 랜덤 배정
-- [ ] validateAssigned() - 배정 여부 확인
-- [ ] isMyTurn(username, currentTurn) - 내 차례 확인
-- [ ] getBlackPlayer(), getWhitePlayer() - getter
+- [x] blackPlayer: String 필드
+- [x] whitePlayer: String 필드
+- [x] assigned: boolean 필드
+- [x] assignColors(player1, player2) - 흑/백 랜덤 배정
+- [x] validateAssigned() - 배정 여부 확인
+- [x] isMyTurn(username, currentTurn) - 내 차례 확인
+- [x] getBlackPlayer(), getWhitePlayer() - getter
 
 ---
 
