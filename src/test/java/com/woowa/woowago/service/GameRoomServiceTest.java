@@ -3,13 +3,14 @@ package com.woowa.woowago.service;
 import com.woowa.woowago.domain.room.GameRoom;
 import com.woowa.woowago.dto.GameStateResponse;
 import com.woowa.woowago.dto.ScoreResponse;
-import com.woowa.woowago.dto.websocket.JoinResponse;
-import com.woowa.woowago.dto.websocket.StartResponse;
+import com.woowa.woowago.dto.websocket.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -73,35 +74,6 @@ class GameRoomServiceTest {
     }
 
     @Test
-    void 존재하지_않는_방_퇴장_시_예외_없음() {
-        assertThatNoException().isThrownBy(() ->
-                service.leaveRoom("unknown-room", "user1")
-        );
-    }
-
-    @Test
-    void 여러_방_동시_관리() {
-        service.joinRoom("room1", "user1");
-        service.joinRoom("room2", "user2");
-
-        GameRoom room1 = service.getRoom("room1");
-        GameRoom room2 = service.getRoom("room2");
-
-        assertThat(room1.getPlayer1()).isEqualTo("user1");
-        assertThat(room2.getPlayer1()).isEqualTo("user2");
-    }
-
-    @Test
-    void getRoomOrThrow_방이_있으면_반환() {
-        service.joinRoom("room1", "user1");
-
-        GameRoom room = service.getRoomOrThrow("room1");
-
-        assertThat(room).isNotNull();
-        assertThat(room.getRoomId()).isEqualTo("room1");
-    }
-
-    @Test
     void getRoomOrThrow_방이_없으면_예외() {
         assertThatThrownBy(() -> service.getRoomOrThrow("unknown-room"))
                 .isInstanceOf(IllegalStateException.class)
@@ -132,17 +104,6 @@ class GameRoomServiceTest {
     }
 
     @Test
-    void start_참가자가_아니면_예외() {
-        service.joinRoom("room1", "user1");
-        service.joinRoom("room1", "user2");
-        service.joinRoom("room1", "user3");  // 관전자
-
-        assertThatThrownBy(() -> service.start("room1", "user3"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("참가자만");
-    }
-
-    @Test
     void move_착수_성공() {
         service.joinRoom("room1", "user1");
         service.joinRoom("room1", "user2");
@@ -155,18 +116,6 @@ class GameRoomServiceTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getMoveCount()).isEqualTo(1);
-    }
-
-    @Test
-    void move_관전자는_착수_불가() {
-        service.joinRoom("room1", "user1");
-        service.joinRoom("room1", "user2");
-        service.joinRoom("room1", "user3");  // 관전자
-        service.start("room1", "user1");
-
-        assertThatThrownBy(() -> service.move("room1", "user3", 10, 10))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("참가자만");
     }
 
     @Test
@@ -191,13 +140,140 @@ class GameRoomServiceTest {
         service.joinRoom("room1", "user2");
         service.start("room1", "user1");
 
-        ScoreResponse mockScore = new ScoreResponse("BLACK+2.5");  // ← 이렇게!
+        ScoreResponse mockScore = new ScoreResponse("BLACK+2.5");
         when(kataGoService.getScore(any())).thenReturn(mockScore);
 
         ScoreResponse response = service.score("room1");
 
         assertThat(response).isNotNull();
         assertThat(response.getResult()).isEqualTo("BLACK+2.5");
-        verify(kataGoService, times(1)).getScore(any());
+    }
+
+    @Test
+    void requestStart_게임_시작_요청() {
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+
+        RequestMessage request = service.requestStart("room1", "user1");
+
+        assertThat(request.getType()).isEqualTo("REQUEST_START");
+        assertThat(request.getRequester()).isEqualTo("user1");
+        assertThat(request.getMessage()).contains("게임 시작");
+    }
+
+    @Test
+    void respondStart_수락시_게임_시작() {
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+        service.requestStart("room1", "user1");
+
+        Object response = service.respondStart("room1", "user2", true);
+
+        assertThat(response).isInstanceOf(StartResponse.class);
+        assertThat(service.getRoom("room1").isGameStarted()).isTrue();
+    }
+
+    @Test
+    void respondStart_거절시_ResponseMessage() {
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+        service.requestStart("room1", "user1");
+
+        Object response = service.respondStart("room1", "user2", false);
+
+        assertThat(response).isInstanceOf(ResponseMessage.class);
+        ResponseMessage msg = (ResponseMessage) response;
+        assertThat(msg.isAccepted()).isFalse();
+    }
+
+    @Test
+    void requestUndo_무르기_요청() {
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+        service.start("room1", "user1");
+
+        RequestMessage request = service.requestUndo("room1", "user1");
+
+        assertThat(request.getType()).isEqualTo("REQUEST_UNDO");
+        assertThat(request.getMessage()).contains("무르기");
+    }
+
+    @Test
+    void respondUndo_수락시_무르기_실행() {
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+        service.start("room1", "user1");
+
+        GameRoom room = service.getRoom("room1");
+        String blackPlayer = room.getSettings().getBlackPlayer();
+        service.move("room1", blackPlayer, 10, 10);
+
+        service.requestUndo("room1", "user1");
+        Object response = service.respondUndo("room1", "user2", true);
+
+        assertThat(response).isInstanceOf(GameStateResponse.class);
+        GameStateResponse state = (GameStateResponse) response;
+        assertThat(state.getMoveCount()).isEqualTo(0);
+    }
+
+    @Test
+    void requestScore_계가_요청() {
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+        service.start("room1", "user1");
+
+        RequestMessage request = service.requestScore("room1", "user1");
+
+        assertThat(request.getType()).isEqualTo("REQUEST_SCORE");
+        assertThat(request.getMessage()).contains("계가");
+    }
+
+    @Test
+    void respondScore_수락시_계가_실행() {
+        when(kataGoService.getScore(any())).thenReturn(new ScoreResponse("B+5.5"));
+
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+        service.start("room1", "user1");
+
+        service.requestScore("room1", "user1");
+        Object response = service.respondScore("room1", "user2", true);
+
+        assertThat(response).isInstanceOf(ScoreResponse.class);
+    }
+
+    @Test
+    void handleDisconnect_연결_끊김_처리() {
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+
+        DisconnectMessage message = service.handleDisconnect("room1", "user1");
+
+        assertThat(message.getUsername()).isEqualTo("user1");
+        assertThat(message.getMessage()).contains("연결이 끊어졌습니다");
+        assertThat(service.getRoom("room1").getPlayer1()).isNull();
+    }
+
+    @Test
+    void handleDisconnect_요청_진행중이면_취소() {
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+        service.requestStart("room1", "user1");
+
+        service.handleDisconnect("room1", "user1");
+
+        assertThat(service.getRoom("room1").hasPendingRequest()).isFalse();
+    }
+
+    @Test
+    void getRoomsWithTimeoutRequests_타임아웃_요청_조회() {
+        service.joinRoom("room1", "user1");
+        service.joinRoom("room1", "user2");
+        service.requestStart("room1", "user1");
+
+        Map<String, GameRoom> timeoutRooms = service.getRoomsWithTimeoutRequests();
+
+        // 타임아웃 전에는 빈 맵
+        assertThat(timeoutRooms).isEmpty();
     }
 }

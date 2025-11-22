@@ -411,23 +411,23 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 4. GameRoomService 리팩토링
 
 ### 4.1. 요청 메서드 추가
-- [ ] requestStart(gameId, username) → RequestMessage 반환
-- [ ] requestUndo(gameId, username) → RequestMessage 반환
-- [ ] requestScore(gameId, username) → RequestMessage 반환
+- [x] requestStart(gameId, username) → RequestMessage 반환
+- [x] requestUndo(gameId, username) → RequestMessage 반환
+- [x] requestScore(gameId, username) → RequestMessage 반환
 
 ### 4.2. 응답 메서드 추가
-- [ ] respondStart(gameId, username, accepted) → StartResponse or ErrorResponse
-- [ ] respondUndo(gameId, username, accepted) → GameStateResponse or ErrorResponse
-- [ ] respondScore(gameId, username, accepted) → ScoreResponse or ErrorResponse
+- [x] respondStart(gameId, username, accepted) → StartResponse or ErrorResponse
+- [x] respondUndo(gameId, username, accepted) → GameStateResponse or ErrorResponse
+- [x] respondScore(gameId, username, accepted) → ScoreResponse or ErrorResponse
 
 ### 4.3. 연결 관리 메서드 (단순화)
-- [ ] handleDisconnect(gameId, username) → DisconnectMessage
+- [x] handleDisconnect(gameId, username) → DisconnectMessage
 
 ### 4.4. 기존 메서드 수정
-- [ ] start(gameId, username) 유지 (내부에서 바로 시작용)
-- [ ] undo(gameId, username) 유지 (내부에서 바로 무르기용)
-- [ ] score(gameId) 유지 (내부에서 바로 계가용)
-- [ ] 위 메서드들은 응답 accept 시 내부적으로 호출됨
+- [x] start(gameId, username) 유지 (내부에서 바로 시작용)
+- [x] undo(gameId, username) 유지 (내부에서 바로 무르기용)
+- [x] score(gameId) 유지 (내부에서 바로 계가용)
+- [x] 위 메서드들은 응답 accept 시 내부적으로 호출됨
 
 ---
 

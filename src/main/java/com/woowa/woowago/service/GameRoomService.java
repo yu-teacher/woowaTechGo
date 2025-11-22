@@ -2,11 +2,11 @@ package com.woowa.woowago.service;
 
 import com.woowa.woowago.domain.game.Position;
 import com.woowa.woowago.domain.room.GameRoom;
+import com.woowa.woowago.domain.room.RequestType;
 import com.woowa.woowago.dto.BlueSpotsResponse;
 import com.woowa.woowago.dto.GameStateResponse;
 import com.woowa.woowago.dto.ScoreResponse;
-import com.woowa.woowago.dto.websocket.JoinResponse;
-import com.woowa.woowago.dto.websocket.StartResponse;
+import com.woowa.woowago.dto.websocket.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -158,7 +158,140 @@ public class GameRoomService {
      */
     public ScoreResponse score(String gameId) {
         GameRoom room = getRoomOrThrow(gameId);
-
         return kataGoService.getScore(room.getGame());
+    }
+
+    /**
+     * 게임 시작 요청
+     * @param gameId 방 ID
+     * @param username 요청자
+     * @return RequestMessage
+     */
+    public RequestMessage requestStart(String gameId, String username) {
+        GameRoom room = getRoomOrThrow(gameId);
+        room.createRequest(RequestType.START, username);
+        return RequestMessage.of(RequestType.START, username);
+    }
+
+    /**
+     * 무르기 요청
+     * @param gameId 방 ID
+     * @param username 요청자
+     * @return RequestMessage
+     */
+    public RequestMessage requestUndo(String gameId, String username) {
+        GameRoom room = getRoomOrThrow(gameId);
+        room.createRequest(RequestType.UNDO, username);
+        return RequestMessage.of(RequestType.UNDO, username);
+    }
+
+    /**
+     * 계가 요청
+     * @param gameId 방 ID
+     * @param username 요청자
+     * @return RequestMessage
+     */
+    public RequestMessage requestScore(String gameId, String username) {
+        GameRoom room = getRoomOrThrow(gameId);
+        room.createRequest(RequestType.SCORE, username);
+        return RequestMessage.of(RequestType.SCORE, username);
+    }
+
+    /**
+     * 게임 시작 요청 응답
+     * @param gameId 방 ID
+     * @param username 응답자
+     * @param accepted 수락 여부
+     * @return StartResponse (수락 시) 또는 ResponseMessage (거절 시)
+     */
+    public Object respondStart(String gameId, String username, boolean accepted) {
+        GameRoom room = getRoomOrThrow(gameId);
+
+        if (accepted) {
+            room.acceptRequest(username);
+            // 실제 게임 시작
+            room.start(username);
+            GameStateResponse gameState = GameStateResponse.from(room.getGame());
+            return StartResponse.from(room, gameState);
+        } else {
+            room.rejectRequest(username);
+            return ResponseMessage.of(RequestType.START, username, false);
+        }
+    }
+
+    /**
+     * 무르기 요청 응답
+     * @param gameId 방 ID
+     * @param username 응답자
+     * @param accepted 수락 여부
+     * @return GameStateResponse (수락 시) 또는 ResponseMessage (거절 시)
+     */
+    public Object respondUndo(String gameId, String username, boolean accepted) {
+        GameRoom room = getRoomOrThrow(gameId);
+
+        if (accepted) {
+            room.acceptRequest(username);
+            // 실제 무르기 실행
+            room.undo(username);
+            return GameStateResponse.from(room.getGame());
+        } else {
+            room.rejectRequest(username);
+            return ResponseMessage.of(RequestType.UNDO, username, false);
+        }
+    }
+
+    /**
+     * 계가 요청 응답
+     * @param gameId 방 ID
+     * @param username 응답자
+     * @param accepted 수락 여부
+     * @return ScoreResponse (수락 시) 또는 ResponseMessage (거절 시)
+     */
+    public Object respondScore(String gameId, String username, boolean accepted) {
+        GameRoom room = getRoomOrThrow(gameId);
+
+        if (accepted) {
+            room.acceptRequest(username);
+            // 실제 계가 실행
+            return kataGoService.getScore(room.getGame());
+        } else {
+            room.rejectRequest(username);
+            return ResponseMessage.of(RequestType.SCORE, username, false);
+        }
+    }
+
+    /**
+     * 연결 끊김 처리
+     * @param gameId 방 ID
+     * @param username 연결이 끊긴 사용자
+     * @return DisconnectMessage
+     */
+    public DisconnectMessage handleDisconnect(String gameId, String username) {
+        GameRoom room = getRoom(gameId);
+        if (room != null) {
+            room.handleDisconnect(username);
+
+            // 방이 비었으면 제거
+            if (room.getParticipants().isEmpty()) {
+                rooms.remove(gameId);
+            }
+        }
+        return DisconnectMessage.of(username);
+    }
+
+    /**
+     * 모든 방의 타임아웃된 요청 조회
+     * @return Map<방ID, GameRoom>
+     */
+    public Map<String, GameRoom> getRoomsWithTimeoutRequests() {
+        Map<String, GameRoom> timeoutRooms = new ConcurrentHashMap<>();
+
+        rooms.forEach((roomId, room) -> {
+            if (room.hasPendingRequest() && room.getPendingRequest().isTimeout()) {
+                timeoutRooms.put(roomId, room);
+            }
+        });
+
+        return timeoutRooms;
     }
 }
