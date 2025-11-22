@@ -326,18 +326,18 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 5. GameWebSocketController 단순화
 
 ### 5.1. 각 메서드 리팩토링
-- [ ] joinGame() - Service 호출만
-- [ ] startNewGame() - Service 호출만
-- [ ] makeMove() - Service 호출만
-- [ ] undo() - Service 호출만
-- [ ] calculateScore() - Service 호출만
-- [ ] leaveGame() - Service 호출만
+- [x] joinGame() - Service 호출만
+- [x] startNewGame() - Service 호출만
+- [x] makeMove() - Service 호출만
+- [x] undo() - Service 호출만
+- [x] calculateScore() - Service 호출만
+- [x] leaveGame() - Service 호출만
 
 ### 5.2. 제거할 메서드
-- [ ] ~~buildGameStateResponse()~~ → GameStateConverter로 이동
-- [ ] ~~convertBoardToArray()~~ → GameStateConverter로 이동
+- [x] ~~buildGameStateResponse()~~ → GameStateResponse.from()으로 교체
+- [x] ~~convertBoardToArray()~~ → GameStateResponse로 이동
 
 ### 5.3. 유지할 메서드
-- [ ] broadcastToRoom() - 메시지 전송
-- [ ] sendError() - 에러 전송 (GlobalExceptionHandler로 나중에 이동)
+- [x] broadcastToRoom() - 메시지 전송
+- [x] sendError() - 에러 전송
 

@@ -1,15 +1,10 @@
 package com.woowa.woowago.controller;
 
-import com.woowa.woowago.domain.game.Game;
-import com.woowa.woowago.domain.game.Position;
-import com.woowa.woowago.domain.game.Stone;
-import com.woowa.woowago.domain.room.GameRoom;
 import com.woowa.woowago.dto.ErrorResponse;
 import com.woowa.woowago.dto.GameStateResponse;
 import com.woowa.woowago.dto.ScoreResponse;
 import com.woowa.woowago.dto.websocket.*;
 import com.woowa.woowago.service.GameRoomService;
-import com.woowa.woowago.service.KataGoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -17,7 +12,7 @@ import org.springframework.stereotype.Controller;
 
 /**
  * WebSocket 게임 컨트롤러
- * STOMP 메시지 처리
+ * STOMP 메시지 처리 (라우팅만 담당)
  */
 @Controller
 @RequiredArgsConstructor
@@ -25,7 +20,6 @@ public class GameWebSocketController {
 
     private final GameRoomService roomService;
     private final SimpMessagingTemplate messagingTemplate;
-    private final KataGoService kataGoService;
 
     /**
      * 게임 방 입장 및 역할 배정
@@ -34,16 +28,9 @@ public class GameWebSocketController {
     @MessageMapping("/game/join")
     public void joinGame(GameJoinRequest request) {
         try {
-            String role = roomService.joinRoom(request.getGameId(), request.getUsername());
-            GameRoom room = roomService.getRoom(request.getGameId());
-
-            GameStateResponse gameState = buildGameStateResponse(room.getGame());
-            JoinResponse joinResponse = JoinResponse.from(room, gameState, role);
-
-            GameMessage message = new GameMessage("JOIN", joinResponse, request.getUsername());
-
+            JoinResponse response = roomService.join(request.getGameId(), request.getUsername());
+            GameMessage message = new GameMessage("JOIN", response, request.getUsername());
             broadcastToRoom(request.getGameId(), message);
-
         } catch (Exception e) {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
         }
@@ -56,28 +43,9 @@ public class GameWebSocketController {
     @MessageMapping("/game/start")
     public void startNewGame(GameActionRequest request) {
         try {
-            GameRoom room = roomService.getRoom(request.getGameId());
-            if (room == null) {
-                throw new IllegalStateException("게임 방을 찾을 수 없습니다.");
-            }
-
-            // 참가자 2명이 있는지 확인
-            if (room.getPlayer1() == null || room.getPlayer2() == null) {
-                throw new IllegalArgumentException("참가자가 2명이어야 게임을 시작할 수 있습니다.");
-            }
-
-            // 참가자만 시작 가능
-            String role = room.getRole(request.getUsername());
-            if (!"player1".equals(role) && !"player2".equals(role)) {
-                throw new IllegalArgumentException("참가자만 게임을 시작할 수 있습니다.");
-            }
-
-            // 게임 초기화
-            room.resetGame();
-            room.startGame();
-
-            GameStateResponse gameState = buildGameStateResponse(room.getGame());
-
+            StartResponse response = roomService.start(request.getGameId(), request.getUsername());
+            GameMessage message = new GameMessage("START", response, request.getUsername());
+            broadcastToRoom(request.getGameId(), message);
         } catch (Exception e) {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
         }
@@ -90,26 +58,14 @@ public class GameWebSocketController {
     @MessageMapping("/game/move")
     public void makeMove(GameMoveRequest request) {
         try {
-            GameRoom room = roomService.getRoom(request.getGameId());
-            if (room == null) {
-                throw new IllegalStateException("게임 방을 찾을 수 없습니다.");
-            }
-
-            // 참가자만 착수 가능
-            String role = room.getRole(request.getUsername());
-            if (!"player1".equals(role) && !"player2".equals(role)) {
-                throw new IllegalArgumentException("참가자만 착수할 수 있습니다.");
-            }
-
-            // 착수 처리
-            Position position = new Position(request.getX(), request.getY());
-            room.getGame().move(position);
-
-            GameStateResponse gameState = buildGameStateResponse(room.getGame());
-            GameMessage message = new GameMessage("MOVE", gameState, request.getUsername());
-
+            GameStateResponse response = roomService.move(
+                    request.getGameId(),
+                    request.getUsername(),
+                    request.getX(),
+                    request.getY()
+            );
+            GameMessage message = new GameMessage("MOVE", response, request.getUsername());
             broadcastToRoom(request.getGameId(), message);
-
         } catch (Exception e) {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
         }
@@ -122,24 +78,9 @@ public class GameWebSocketController {
     @MessageMapping("/game/undo")
     public void undo(GameActionRequest request) {
         try {
-            GameRoom room = roomService.getRoom(request.getGameId());
-            if (room == null) {
-                throw new IllegalStateException("게임 방을 찾을 수 없습니다.");
-            }
-
-            // 참가자만 무르기 가능
-            String role = room.getRole(request.getUsername());
-            if (!"player1".equals(role) && !"player2".equals(role)) {
-                throw new IllegalArgumentException("참가자만 무르기를 할 수 있습니다.");
-            }
-
-            room.getGame().undo();
-
-            GameStateResponse gameState = buildGameStateResponse(room.getGame());
-            GameMessage message = new GameMessage("UNDO", gameState, request.getUsername());
-
+            GameStateResponse response = roomService.undo(request.getGameId(), request.getUsername());
+            GameMessage message = new GameMessage("UNDO", response, request.getUsername());
             broadcastToRoom(request.getGameId(), message);
-
         } catch (Exception e) {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
         }
@@ -152,17 +93,9 @@ public class GameWebSocketController {
     @MessageMapping("/game/score")
     public void calculateScore(GameActionRequest request) {
         try {
-            GameRoom room = roomService.getRoom(request.getGameId());
-            if (room == null) {
-                throw new IllegalStateException("게임 방을 찾을 수 없습니다.");
-            }
-
-            // KataGo로 계가 계산
-            ScoreResponse scoreResponse = kataGoService.getScore(room.getGame());
-
-            GameMessage message = new GameMessage("SCORE", scoreResponse, request.getUsername());
+            ScoreResponse response = roomService.score(request.getGameId());
+            GameMessage message = new GameMessage("SCORE", response, request.getUsername());
             broadcastToRoom(request.getGameId(), message);
-
         } catch (Exception e) {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
         }
@@ -176,44 +109,11 @@ public class GameWebSocketController {
     public void leaveGame(GameActionRequest request) {
         try {
             roomService.leaveRoom(request.getGameId(), request.getUsername());
-
             GameMessage message = new GameMessage("LEAVE", null, request.getUsername());
             broadcastToRoom(request.getGameId(), message);
-
         } catch (Exception e) {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
         }
-    }
-
-    /**
-     * 게임 상태 응답 생성
-     */
-    private GameStateResponse buildGameStateResponse(Game game) {
-        Stone[][] board = convertBoardToArray(game);
-        String currentTurn = game.getState().getCurrentTurn().name();
-        int blackCaptures = game.getState().getBlackCaptures();
-        int whiteCaptures = game.getState().getWhiteCaptures();
-        int moveCount = game.getMoveHistory().size();
-
-        return new GameStateResponse(board, currentTurn, blackCaptures, whiteCaptures, moveCount);
-    }
-
-    /**
-     * Board를 2차원 배열로 변환
-     * EMPTY는 null로 변환
-     */
-    private Stone[][] convertBoardToArray(Game game) {
-        Stone[][] boardArray = new Stone[19][19];
-        for (int x = 1; x <= 19; x++) {
-            for (int y = 1; y <= 19; y++) {
-                Stone stone = game.getState()
-                        .getBoard()
-                        .getStone(new Position(x, y));
-                // EMPTY는 null로 변환
-                boardArray[x - 1][y - 1] = (stone == Stone.EMPTY) ? null : stone;
-            }
-        }
-        return boardArray;
     }
 
     /**
@@ -229,7 +129,7 @@ public class GameWebSocketController {
     private void sendError(String gameId, String username, String errorMessage) {
         GameMessage message = new GameMessage(
                 "ERROR",
-                new ErrorResponse("[ERROR] " + errorMessage),
+                new ErrorResponse(errorMessage),
                 username
         );
         broadcastToRoom(gameId, message);
