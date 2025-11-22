@@ -453,11 +453,11 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 6. WebSocket 이벤트 리스너 생성
 
 ### 6.1. WebSocketEventListener.java (새로 생성)
-- [ ] handleWebSocketDisconnectListener() - 연결 끊김 감지 → 방에서 제거
+- [x] handleWebSocketDisconnectListener() - 연결 끊김 감지 → 방에서 제거
 
 ### 6.2. WebSocketConfig 수정
-- [ ] ChannelInterceptor 추가 - username/gameId 세션 저장
-- [ ] preSend() 구현 - SUBSCRIBE 시 gameId 추출하여 저장
+- [x] ChannelInterceptor 추가 - username/gameId 세션 저장
+- [x] preSend() 구현 - SUBSCRIBE 시 gameId 추출하여 저장
 
 ---
 
