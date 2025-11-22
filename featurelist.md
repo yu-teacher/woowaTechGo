@@ -388,18 +388,23 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 3. 새로운 DTO 생성
 
 ### 3.1. RequestMessage
-- [ ] type: String 필드 (REQUEST_START, REQUEST_UNDO, REQUEST_SCORE)
-- [ ] requester: String 필드
-- [ ] message: String 필드 ("OOO님이 게임 시작을 요청했습니다")
+- [x] type: String 필드 (REQUEST_START, REQUEST_UNDO, REQUEST_SCORE)
+- [x] requester: String 필드
+- [x] message: String 필드 ("OOO님이 게임 시작을 요청했습니다")
 
 ### 3.2. ResponseMessage
-- [ ] type: String 필드 (RESPOND_START, RESPOND_UNDO, RESPOND_SCORE)
-- [ ] responder: String 필드
-- [ ] accepted: boolean 필드
+- [x] type: String 필드 (RESPOND_START, RESPOND_UNDO, RESPOND_SCORE)
+- [x] responder: String 필드
+- [x] accepted: boolean 필드
 
 ### 3.3. DisconnectMessage
-- [ ] username: String 필드
-- [ ] message: String 필드 ("OOO님의 연결이 끊어졌습니다")
+- [x] username: String 필드
+- [x] message: String 필드 ("OOO님의 연결이 끊어졌습니다")
+
+### 3.4 TimeoutMessage
+- [x] type: String 필드
+- [x] requester: String 필드
+- [x] message: String 필드 ("요청 시간이 초과되었습니다")
 
 ---
 
