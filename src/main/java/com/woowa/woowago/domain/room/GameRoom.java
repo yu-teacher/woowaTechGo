@@ -15,6 +15,7 @@ public class GameRoom {
     private Game game;
     private GameSettings settings;
     private boolean started = false;
+    private PendingRequest pendingRequest;
 
     public GameRoom(String roomId) {
         this.roomId = roomId;
@@ -174,5 +175,97 @@ public class GameRoom {
      */
     public java.util.Set<String> getSpectators() {
         return participants.getSpectatorUsernames();
+    }
+
+    /**
+     * 요청 생성
+     */
+    public void createRequest(RequestType type, String requester) {
+        validateCanRequest(requester, type);
+        this.pendingRequest = new PendingRequest(type, requester);
+    }
+
+    /**
+     * 대기 중인 요청이 있는지
+     */
+    public boolean hasPendingRequest() {
+        return pendingRequest != null;
+    }
+
+    /**
+     * 요청 수락
+     */
+    public void acceptRequest(String responder) {
+        validateCanRespond(responder);
+        clearRequest();
+    }
+
+    /**
+     * 요청 거절
+     */
+    public void rejectRequest(String responder) {
+        validateCanRespond(responder);
+        clearRequest();
+    }
+
+    /**
+     * 요청 초기화
+     */
+    public void clearRequest() {
+        this.pendingRequest = null;
+    }
+
+    /**
+     * 요청 가능 여부 검증
+     */
+    private void validateCanRequest(String username, RequestType type) {
+        // 이미 대기 중인 요청이 있으면 불가
+        if (hasPendingRequest()) {
+            throw new IllegalStateException("[ERROR] 이미 처리 중인 요청이 있습니다.");
+        }
+
+        // 참가자만 요청 가능
+        participants.validatePlayerPermission(username);
+
+        // 게임 시작 전에는 무르기/계가 불가
+        if (!started && (type == RequestType.UNDO || type == RequestType.SCORE)) {
+            throw new IllegalStateException("[ERROR] 게임이 시작되지 않았습니다.");
+        }
+    }
+
+    /**
+     * 응답 가능 여부 검증
+     */
+    private void validateCanRespond(String username) {
+        if (!hasPendingRequest()) {
+            throw new IllegalStateException("[ERROR] 대기 중인 요청이 없습니다.");
+        }
+
+        // 요청자가 아닌 상대방만 응답 가능
+        String targetPlayer = pendingRequest.getTargetPlayer(
+                participants.getPlayer1Username(),
+                participants.getPlayer2Username()
+        );
+
+        if (!username.equals(targetPlayer)) {
+            throw new IllegalStateException("[ERROR] 응답 권한이 없습니다.");
+        }
+    }
+
+    /**
+     * 연결 끊김 처리
+     */
+    public void handleDisconnect(String username) {
+        if (hasPendingRequest()) {
+            String requester = pendingRequest.getRequester();
+            String player1 = participants.getPlayer1Username();
+            String player2 = participants.getPlayer2Username();
+
+            if (username.equals(requester) || username.equals(player1) || username.equals(player2)) {
+                clearRequest();
+            }
+        }
+
+        removeUser(username);
     }
 }

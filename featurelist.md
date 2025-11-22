@@ -352,36 +352,36 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 1. 새로운 도메인 객체 생성
 
 ### 1.1. RequestType (Enum)
-- [ ] START - 게임 시작 요청
-- [ ] UNDO - 무르기 요청
-- [ ] SCORE - 계가 요청
+- [x] START - 게임 시작 요청
+- [x] UNDO - 무르기 요청
+- [x] SCORE - 계가 요청
 
 ### 1.2. PendingRequest (Value Object)
-- [ ] type: RequestType 필드
-- [ ] requester: String 필드 (요청한 사람)
-- [ ] requestedAt: Instant 필드 (요청 시간)
-- [ ] isTimeout() - 30초 경과 여부 확인
-- [ ] getTargetPlayer(room) - 응답해야 할 사람 찾기
-- [ ] equals/hashCode 구현
+- [x] type: RequestType 필드
+- [x] requester: String 필드 (요청한 사람)
+- [x] requestedAt: Instant 필드 (요청 시간)
+- [x] isTimeout() - 30초 경과 여부 확인
+- [x] getTargetPlayer(room) - 응답해야 할 사람 찾기
+- [x] equals/hashCode 구현
 
 ---
 
 ## 2. GameRoom 리팩토링
 
 ### 2.1. 필드 추가
-- [ ] pendingRequest: PendingRequest 필드
+- [x] pendingRequest: PendingRequest 필드
 
 ### 2.2. 요청/응답 로직
-- [ ] createRequest(type, requester) - 요청 생성
-- [ ] hasPendingRequest() - 대기 중인 요청 있는지
-- [ ] acceptRequest(responder) - 요청 수락
-- [ ] rejectRequest(responder) - 요청 거절
-- [ ] clearRequest() - 요청 초기화
-- [ ] validateCanRequest(username, type) - 요청 가능 여부 검증
-- [ ] validateCanRespond(username) - 응답 가능 여부 검증
+- [x] createRequest(type, requester) - 요청 생성
+- [x] hasPendingRequest() - 대기 중인 요청 있는지
+- [x] acceptRequest(responder) - 요청 수락
+- [x] rejectRequest(responder) - 요청 거절
+- [x] clearRequest() - 요청 초기화
+- [x] validateCanRequest(username, type) - 요청 가능 여부 검증
+- [x] validateCanRespond(username) - 응답 가능 여부 검증
 
 ### 2.3. 연결 관리 로직 (단순화)
-- [ ] handleDisconnect(username) - 방에서 사용자 제거
+- [x] handleDisconnect(username) - 방에서 사용자 제거
 
 ---
 

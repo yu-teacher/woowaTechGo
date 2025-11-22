@@ -186,4 +186,224 @@ class GameRoomTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("참가자만");
     }
+
+    @Test
+    void 게임_시작_요청_생성() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.createRequest(RequestType.START, "user1");
+
+        assertThat(room.hasPendingRequest()).isTrue();
+        assertThat(room.getPendingRequest().getType()).isEqualTo(RequestType.START);
+        assertThat(room.getPendingRequest().getRequester()).isEqualTo("user1");
+    }
+
+    @Test
+    void 무르기_요청_생성() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.start("user1");
+
+        room.createRequest(RequestType.UNDO, "user1");
+
+        assertThat(room.hasPendingRequest()).isTrue();
+        assertThat(room.getPendingRequest().getType()).isEqualTo(RequestType.UNDO);
+    }
+
+    @Test
+    void 계가_요청_생성() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.start("user1");
+
+        room.createRequest(RequestType.SCORE, "user1");
+
+        assertThat(room.hasPendingRequest()).isTrue();
+        assertThat(room.getPendingRequest().getType()).isEqualTo(RequestType.SCORE);
+    }
+
+    @Test
+    void 이미_대기중인_요청이_있으면_새_요청_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.createRequest(RequestType.START, "user1");
+
+        assertThatThrownBy(() -> room.createRequest(RequestType.START, "user2"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("이미 처리 중인 요청이 있습니다");
+    }
+
+    @Test
+    void 관전자는_요청_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.addUser("user3");
+
+        assertThatThrownBy(() -> room.createRequest(RequestType.START, "user3"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("참가자만");
+    }
+
+    @Test
+    void 게임_시작_전_무르기_요청_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        assertThatThrownBy(() -> room.createRequest(RequestType.UNDO, "user1"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("게임이 시작되지 않았습니다");
+    }
+
+    @Test
+    void 게임_시작_전_계가_요청_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        assertThatThrownBy(() -> room.createRequest(RequestType.SCORE, "user1"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("게임이 시작되지 않았습니다");
+    }
+
+    @Test
+    void 요청_수락() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.createRequest(RequestType.START, "user1");
+        room.acceptRequest("user2");
+
+        assertThat(room.hasPendingRequest()).isFalse();
+    }
+
+    @Test
+    void 요청_거절() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.createRequest(RequestType.START, "user1");
+        room.rejectRequest("user2");
+
+        assertThat(room.hasPendingRequest()).isFalse();
+    }
+
+    @Test
+    void 대기중인_요청이_없으면_수락_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        assertThatThrownBy(() -> room.acceptRequest("user2"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("대기 중인 요청이 없습니다");
+    }
+
+    @Test
+    void 요청자가_아닌_상대방만_응답_가능() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.createRequest(RequestType.START, "user1");
+
+        // 요청자 본인은 응답 불가
+        assertThatThrownBy(() -> room.acceptRequest("user1"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("응답 권한이 없습니다");
+    }
+
+    @Test
+    void 관전자는_응답_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.addUser("user3");
+
+        room.createRequest(RequestType.START, "user1");
+
+        assertThatThrownBy(() -> room.acceptRequest("user3"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("응답 권한이 없습니다");
+    }
+
+    @Test
+    void 타겟_플레이어_조회() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.createRequest(RequestType.START, "user1");
+
+        String targetPlayer = room.getPendingRequest().getTargetPlayer("user1", "user2");
+        assertThat(targetPlayer).isEqualTo("user2");
+    }
+
+// ==================== 연결 끊김 처리 테스트 ====================
+
+    @Test
+    void 연결_끊김시_사용자_제거() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.handleDisconnect("user1");
+
+        assertThat(room.getPlayer1()).isNull();
+        assertThat(room.getPlayer2()).isEqualTo("user2");
+    }
+
+    @Test
+    void 연결_끊김시_진행중인_요청_취소() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.createRequest(RequestType.START, "user1");
+        assertThat(room.hasPendingRequest()).isTrue();
+
+        room.handleDisconnect("user1");
+
+        assertThat(room.hasPendingRequest()).isFalse();
+    }
+
+    @Test
+    void 연결_끊김시_응답자가_끊겨도_요청_취소() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.createRequest(RequestType.START, "user1");
+        assertThat(room.hasPendingRequest()).isTrue();
+
+        // 응답자가 연결 끊김
+        room.handleDisconnect("user2");
+
+        assertThat(room.hasPendingRequest()).isFalse();
+    }
+
+    @Test
+    void 관전자_연결_끊김은_요청에_영향_없음() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.addUser("user3");
+
+        room.createRequest(RequestType.START, "user1");
+        assertThat(room.hasPendingRequest()).isTrue();
+
+        // 관전자 연결 끊김
+        room.handleDisconnect("user3");
+
+        assertThat(room.hasPendingRequest()).isTrue();
+    }
 }
