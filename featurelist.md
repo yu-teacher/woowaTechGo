@@ -278,18 +278,18 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 - [x] ~~gameStarted~~ → started로 네이밍 통일
 
 ### 2.2. 도메인 로직 추가
-- [ ] validateExists() - 방 존재 확인
-- [ ] validateCanStart() - 게임 시작 가능 여부 검증
-- [ ] start(username) - 게임 시작 (검증 + 색상 배정 + 초기화)
-- [ ] move(username, position) - 착수 (권한 + 차례 검증)
-- [ ] undo(username) - 무르기 (권한 검증)
-- [ ] isMyTurn(username) - 내 차례인지 확인
+- [x] validateExists() - 방 존재 확인
+- [x] validateCanStart() - 게임 시작 가능 여부 검증
+- [x] start(username) - 게임 시작 (검증 + 색상 배정 + 초기화)
+- [x] move(username, position) - 착수 (권한 + 차례 검증)
+- [x] undo(username) - 무르기 (권한 검증)
+- [x] isMyTurn(username) - 내 차례인지 확인
 
 ### 2.3. 기존 메서드 수정
-- [ ] addUser() → participants.add()로 위임
-- [ ] removeUser() → participants.remove()로 위임
-- [ ] getRole() → participants.getRole()로 위임
-- [ ] isReady() → participants.isReady()로 위임
+- [x] addUser() → participants.add()로 위임
+- [x] removeUser() → participants.remove()로 위임
+- [x] getRole() → participants.getRole()로 위임
+- [x] isReady() → participants.isReady()로 위임
 
 ---
 

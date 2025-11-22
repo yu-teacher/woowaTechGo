@@ -1,6 +1,7 @@
 package com.woowa.woowago.domain.room;
 
 import com.woowa.woowago.domain.game.Game;
+import com.woowa.woowago.domain.game.Position;
 import lombok.Getter;
 
 /**
@@ -78,6 +79,83 @@ public class GameRoom {
     }
 
     /**
+     * 게임 시작 가능 여부 검증
+     */
+    public void validateCanStart() {
+        if (!participants.isReady()) {
+            throw new IllegalArgumentException("[ERROR] 참가자가 2명이어야 게임을 시작할 수 있습니다.");
+        }
+        if (started) {
+            throw new IllegalStateException("[ERROR] 이미 게임이 시작되었습니다.");
+        }
+    }
+
+    /**
+     * 게임 시작 (검증 + 색상 배정 + 초기화)
+     * @param username 게임을 시작하는 사용자
+     */
+    public void start(String username) {
+        // 1. 권한 검증
+        participants.validatePlayerPermission(username);
+
+        // 2. 시작 가능 검증
+        validateCanStart();
+
+        // 3. 색상 배정
+        this.settings = new GameSettings();
+        this.settings.assignColors(
+                participants.getPlayer1Username(),
+                participants.getPlayer2Username()
+        );
+
+        // 4. 게임 초기화 및 시작
+        resetGame();
+        this.started = true;
+    }
+
+    /**
+     * 착수 (권한 + 차례 검증)
+     * @param username 착수하는 사용자
+     * @param position 착수 위치
+     */
+    public void move(String username, Position position) {
+        // 1. 참가자 권한 검증
+        participants.validatePlayerPermission(username);
+
+        // 2. 차례 검증
+        if (settings != null) {
+            settings.validateMyTurn(username, game.getState().getCurrentTurn());
+        }
+
+        // 3. 착수
+        game.move(position);
+    }
+
+    /**
+     * 무르기 (권한 검증)
+     * @param username 무르기를 요청하는 사용자
+     */
+    public void undo(String username) {
+        // 1. 참가자 권한 검증
+        participants.validatePlayerPermission(username);
+
+        // 2. 무르기
+        game.undo();
+    }
+
+    /**
+     * 내 차례인지 확인
+     * @param username 사용자명
+     * @return 내 차례면 true
+     */
+    public boolean isMyTurn(String username) {
+        if (settings == null || !started) {
+            return false;
+        }
+        return settings.isMyTurn(username, game.getState().getCurrentTurn());
+    }
+
+    /**
      * Player1 username 조회
      */
     public String getPlayer1() {
@@ -95,7 +173,6 @@ public class GameRoom {
      * 관전자 Set 조회
      */
     public java.util.Set<String> getSpectators() {
-        // 임시: 빈 Set 반환 (Service에서 getSpectatorCount 사용하도록 변경 필요)
-        return java.util.Collections.emptySet();
+        return participants.getSpectatorUsernames();
     }
 }

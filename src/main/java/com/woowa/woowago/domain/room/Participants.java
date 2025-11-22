@@ -119,6 +119,12 @@ public class Participants {
         return spectators.size();
     }
 
+    public Set<String> getSpectatorUsernames() {
+        return spectators.stream()
+                .map(Participant::getUsername)
+                .collect(java.util.stream.Collectors.toSet());
+    }
+
     public boolean isEmpty() {
         return player1 == null && player2 == null && spectators.isEmpty();
     }

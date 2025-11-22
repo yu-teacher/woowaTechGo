@@ -16,6 +16,7 @@ class GameRoomTest {
         assertThat(room.getPlayer2()).isNull();
         assertThat(room.getSpectators()).isEmpty();
         assertThat(room.getGame()).isNotNull();
+        assertThat(room.isGameStarted()).isFalse();
     }
 
     @Test
@@ -69,5 +70,120 @@ class GameRoomTest {
 
         assertThat(room1.getGame().getMoveHistory()).hasSize(1);
         assertThat(room2.getGame().getMoveHistory()).isEmpty();
+    }
+
+    @Test
+    void 게임_준비_완료_확인() {
+        GameRoom room = new GameRoom("test-room");
+
+        assertThat(room.isReady()).isFalse();
+
+        room.addUser("user1");
+        assertThat(room.isReady()).isFalse();
+
+        room.addUser("user2");
+        assertThat(room.isReady()).isTrue();
+    }
+
+    @Test
+    void 게임_시작() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+
+        room.start("user1");
+
+        assertThat(room.isGameStarted()).isTrue();
+        assertThat(room.getSettings()).isNotNull();
+        assertThat(room.getSettings().isAssigned()).isTrue();
+    }
+
+    @Test
+    void 참가자가_2명_아니면_시작_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+
+        assertThatThrownBy(() -> room.start("user1"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("참가자가 2명이어야");
+    }
+
+    @Test
+    void 관전자는_게임_시작_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.addUser("user3");
+
+        assertThatThrownBy(() -> room.start("user3"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("참가자만");
+    }
+
+    @Test
+    void 착수_성공() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.start("user1");
+
+        String blackPlayer = room.getSettings().getBlackPlayer();
+
+        assertThatCode(() -> room.move(blackPlayer, new Position(10, 10)))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    void 관전자는_착수_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.addUser("user3");
+        room.start("user1");
+
+        assertThatThrownBy(() -> room.move("user3", new Position(10, 10)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("참가자만");
+    }
+
+    @Test
+    void 차례가_아니면_착수_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.start("user1");
+
+        String whitePlayer = room.getSettings().getWhitePlayer();
+
+        assertThatThrownBy(() -> room.move(whitePlayer, new Position(10, 10)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("차례입니다");
+    }
+
+    @Test
+    void 무르기_성공() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.start("user1");
+
+        String blackPlayer = room.getSettings().getBlackPlayer();
+        room.move(blackPlayer, new Position(10, 10));
+
+        assertThatCode(() -> room.undo("user1"))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    void 관전자는_무르기_불가() {
+        GameRoom room = new GameRoom("test-room");
+        room.addUser("user1");
+        room.addUser("user2");
+        room.addUser("user3");
+        room.start("user1");
+
+        assertThatThrownBy(() -> room.undo("user3"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("참가자만");
     }
 }
