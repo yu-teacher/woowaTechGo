@@ -434,19 +434,19 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 5. GameWebSocketController 확장
 
 ### 5.1. 요청 엔드포인트 추가
-- [ ] @MessageMapping("/game/request/start")
-- [ ] @MessageMapping("/game/request/undo")
-- [ ] @MessageMapping("/game/request/score")
+- [x] @MessageMapping("/game/request/start")
+- [x] @MessageMapping("/game/request/undo")
+- [x] @MessageMapping("/game/request/score")
 
 ### 5.2. 응답 엔드포인트 추가
-- [ ] @MessageMapping("/game/respond/start")
-- [ ] @MessageMapping("/game/respond/undo")
-- [ ] @MessageMapping("/game/respond/score")
+- [x] @MessageMapping("/game/respond/start")
+- [x] @MessageMapping("/game/respond/undo")
+- [x] @MessageMapping("/game/respond/score")
 
 ### 5.3. 기존 엔드포인트 유지 (하위 호환)
-- [ ] @MessageMapping("/game/start") - 싱글 플레이용
-- [ ] @MessageMapping("/game/undo") - 싱글 플레이용
-- [ ] @MessageMapping("/game/score") - 싱글 플레이용
+- [x] @MessageMapping("/game/start")
+- [x] @MessageMapping("/game/undo")
+- [x] @MessageMapping("/game/score")
 
 ---
 

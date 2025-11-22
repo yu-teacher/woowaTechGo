@@ -1,6 +1,5 @@
 package com.woowa.woowago.controller;
 
-import com.woowa.woowago.dto.BlueSpotsResponse;
 import com.woowa.woowago.dto.ErrorResponse;
 import com.woowa.woowago.dto.GameStateResponse;
 import com.woowa.woowago.dto.ScoreResponse;
@@ -38,7 +37,7 @@ public class GameWebSocketController {
     }
 
     /**
-     * 새 게임 시작 (참가자만)
+     * 새 게임 시작 (참가자만) - 기존 방식 (하위 호환)
      * /app/game/start
      */
     @MessageMapping("/game/start")
@@ -73,7 +72,7 @@ public class GameWebSocketController {
     }
 
     /**
-     * 무르기 (참가자만)
+     * 무르기 (참가자만) - 기존 방식 (하위 호환)
      * /app/game/undo
      */
     @MessageMapping("/game/undo")
@@ -88,22 +87,7 @@ public class GameWebSocketController {
     }
 
     /**
-     * 착수 추천 (모든 사용자에게 브로드캐스트)
-     * /app/game/bluespots
-     */
-    @MessageMapping("/game/bluespots")
-    public void recommendMove(GameActionRequest request) {
-        try {
-            BlueSpotsResponse response = roomService.blueSpots(request.getGameId());
-            GameMessage message = new GameMessage("BLUESPOTS", response, request.getUsername());
-            broadcastToRoom(request.getGameId(), message);
-        } catch (Exception e) {
-            sendError(request.getGameId(), request.getUsername(), e.getMessage());
-        }
-    }
-
-    /**
-     * 계가 (모든 사용자에게 브로드캐스트)
+     * 계가 (모든 사용자에게 브로드캐스트) - 기존 방식 (하위 호환)
      * /app/game/score
      */
     @MessageMapping("/game/score")
@@ -126,6 +110,114 @@ public class GameWebSocketController {
         try {
             roomService.leaveRoom(request.getGameId(), request.getUsername());
             GameMessage message = new GameMessage("LEAVE", null, request.getUsername());
+            broadcastToRoom(request.getGameId(), message);
+        } catch (Exception e) {
+            sendError(request.getGameId(), request.getUsername(), e.getMessage());
+        }
+    }
+
+    /**
+     * 게임 시작 요청
+     * /app/game/request/start
+     */
+    @MessageMapping("/game/request/start")
+    public void requestStart(GameActionRequest request) {
+        try {
+            RequestMessage response = roomService.requestStart(request.getGameId(), request.getUsername());
+            GameMessage message = new GameMessage("REQUEST_START", response, request.getUsername());
+            broadcastToRoom(request.getGameId(), message);
+        } catch (Exception e) {
+            sendError(request.getGameId(), request.getUsername(), e.getMessage());
+        }
+    }
+
+    /**
+     * 무르기 요청
+     * /app/game/request/undo
+     */
+    @MessageMapping("/game/request/undo")
+    public void requestUndo(GameActionRequest request) {
+        try {
+            RequestMessage response = roomService.requestUndo(request.getGameId(), request.getUsername());
+            GameMessage message = new GameMessage("REQUEST_UNDO", response, request.getUsername());
+            broadcastToRoom(request.getGameId(), message);
+        } catch (Exception e) {
+            sendError(request.getGameId(), request.getUsername(), e.getMessage());
+        }
+    }
+
+    /**
+     * 계가 요청
+     * /app/game/request/score
+     */
+    @MessageMapping("/game/request/score")
+    public void requestScore(GameActionRequest request) {
+        try {
+            RequestMessage response = roomService.requestScore(request.getGameId(), request.getUsername());
+            GameMessage message = new GameMessage("REQUEST_SCORE", response, request.getUsername());
+            broadcastToRoom(request.getGameId(), message);
+        } catch (Exception e) {
+            sendError(request.getGameId(), request.getUsername(), e.getMessage());
+        }
+    }
+
+    /**
+     * 게임 시작 응답
+     * /app/game/respond/start
+     */
+    @MessageMapping("/game/respond/start")
+    public void respondStart(RespondRequest request) {
+        try {
+            Object response = roomService.respondStart(
+                    request.getGameId(),
+                    request.getUsername(),
+                    request.isAccepted()
+            );
+
+            String messageType = request.isAccepted() ? "START" : "RESPOND_START";
+            GameMessage message = new GameMessage(messageType, response, request.getUsername());
+            broadcastToRoom(request.getGameId(), message);
+        } catch (Exception e) {
+            sendError(request.getGameId(), request.getUsername(), e.getMessage());
+        }
+    }
+
+    /**
+     * 무르기 응답
+     * /app/game/respond/undo
+     */
+    @MessageMapping("/game/respond/undo")
+    public void respondUndo(RespondRequest request) {
+        try {
+            Object response = roomService.respondUndo(
+                    request.getGameId(),
+                    request.getUsername(),
+                    request.isAccepted()
+            );
+
+            String messageType = request.isAccepted() ? "UNDO" : "RESPOND_UNDO";
+            GameMessage message = new GameMessage(messageType, response, request.getUsername());
+            broadcastToRoom(request.getGameId(), message);
+        } catch (Exception e) {
+            sendError(request.getGameId(), request.getUsername(), e.getMessage());
+        }
+    }
+
+    /**
+     * 계가 응답
+     * /app/game/respond/score
+     */
+    @MessageMapping("/game/respond/score")
+    public void respondScore(RespondRequest request) {
+        try {
+            Object response = roomService.respondScore(
+                    request.getGameId(),
+                    request.getUsername(),
+                    request.isAccepted()
+            );
+
+            String messageType = request.isAccepted() ? "SCORE" : "RESPOND_SCORE";
+            GameMessage message = new GameMessage(messageType, response, request.getUsername());
             broadcastToRoom(request.getGameId(), message);
         } catch (Exception e) {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
