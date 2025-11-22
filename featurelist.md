@@ -312,14 +312,14 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 4. GameRoomService 리팩토링
 
 ### 4.1. 비즈니스 로직 추가
-- [ ] join(gameId, username) → JoinResponse 반환
-- [ ] start(gameId, username) → StartResponse 반환
-- [ ] move(gameId, username, x, y) → GameStateResponse 반환
-- [ ] undo(gameId, username) → GameStateResponse 반환
-- [ ] score(gameId) → ScoreResponse 반환
+- [x] join(gameId, username) → JoinResponse 반환
+- [x] start(gameId, username) → StartResponse 반환
+- [x] move(gameId, username, x, y) → GameStateResponse 반환
+- [x] undo(gameId, username) → GameStateResponse 반환
+- [x] score(gameId) → ScoreResponse 반환
 
 ### 4.2. 검증 로직
-- [ ] getRoomOrThrow(gameId) - 방 조회 + 예외 처리
+- [x] getRoomOrThrow(gameId) - 방 조회 + 예외 처리
 
 ---
 
