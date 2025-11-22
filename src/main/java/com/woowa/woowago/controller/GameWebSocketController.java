@@ -78,13 +78,6 @@ public class GameWebSocketController {
 
             GameStateResponse gameState = buildGameStateResponse(room.getGame());
 
-            // TODO: 흑/백 랜덤 배정은 나중에 추가
-            StartResponse startResponse = StartResponse.from(room, gameState, null, null);
-
-            GameMessage message = new GameMessage("START", startResponse, request.getUsername());
-
-            broadcastToRoom(request.getGameId(), message);
-
         } catch (Exception e) {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
         }

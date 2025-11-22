@@ -19,8 +19,15 @@ public class StartResponse {
     private String blackPlayer;       // 흑돌 플레이어
     private String whitePlayer;       // 백돌 플레이어
 
-    public static StartResponse from(GameRoom room, GameStateResponse gameState,
-                                     String blackPlayer, String whitePlayer) {
+    public static StartResponse from(GameRoom room, GameStateResponse gameState) {
+        String blackPlayer = null;
+        String whitePlayer = null;
+
+        if (room.getSettings() != null) {
+            blackPlayer = room.getSettings().getBlackPlayer();
+            whitePlayer = room.getSettings().getWhitePlayer();
+        }
+
         return new StartResponse(
                 gameState,
                 room.getPlayer1(),

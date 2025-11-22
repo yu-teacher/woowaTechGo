@@ -293,42 +293,39 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 
 ---
 
-## 3. Converter 클래스 생성
+## 3. DTO 리팩토링
 
-### 3.1. GameStateConverter
-- [ ] from(Game game) → GameStateResponse 정적 팩토리 메서드
-- [ ] convertBoardToArray(Game game) - Board 변환 로직
+### 3.1. GameStateResponse
+- [x] from(Game game) → GameStateResponse 정적 팩토리 메서드
+- [x] convertBoardToArray(Game game) - Board 변환 로직
 
----
-
-## 4. DTO 리팩토링
-
-### 4.1. JoinResponse
+### 3.2. JoinResponse
 - [x] 정적 팩토리 메서드 from(room, gameState, role)
 
-### 4.2. StartResponse
+### 3.3. StartResponse
 - [x] 정적 팩토리 메서드 from(room, gameState, blackPlayer, whitePlayer)
-- [ ] GameSettings에서 흑/백 정보 가져오도록 수정
+- [x] GameSettings에서 흑/백 정보 가져오도록 수정
+
 
 ---
 
-## 5. GameRoomService 리팩토링
+## 4. GameRoomService 리팩토링
 
-### 5.1. 비즈니스 로직 추가
+### 4.1. 비즈니스 로직 추가
 - [ ] join(gameId, username) → JoinResponse 반환
 - [ ] start(gameId, username) → StartResponse 반환
 - [ ] move(gameId, username, x, y) → GameStateResponse 반환
 - [ ] undo(gameId, username) → GameStateResponse 반환
 - [ ] score(gameId) → ScoreResponse 반환
 
-### 5.2. 검증 로직
+### 4.2. 검증 로직
 - [ ] getRoomOrThrow(gameId) - 방 조회 + 예외 처리
 
 ---
 
-## 6. GameWebSocketController 단순화
+## 5. GameWebSocketController 단순화
 
-### 6.1. 각 메서드 리팩토링
+### 5.1. 각 메서드 리팩토링
 - [ ] joinGame() - Service 호출만
 - [ ] startNewGame() - Service 호출만
 - [ ] makeMove() - Service 호출만
@@ -336,11 +333,11 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 - [ ] calculateScore() - Service 호출만
 - [ ] leaveGame() - Service 호출만
 
-### 6.2. 제거할 메서드
+### 5.2. 제거할 메서드
 - [ ] ~~buildGameStateResponse()~~ → GameStateConverter로 이동
 - [ ] ~~convertBoardToArray()~~ → GameStateConverter로 이동
 
-### 6.3. 유지할 메서드
+### 5.3. 유지할 메서드
 - [ ] broadcastToRoom() - 메시지 전송
 - [ ] sendError() - 에러 전송 (GlobalExceptionHandler로 나중에 이동)
 
