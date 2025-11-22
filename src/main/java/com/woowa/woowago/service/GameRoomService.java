@@ -2,6 +2,7 @@ package com.woowa.woowago.service;
 
 import com.woowa.woowago.domain.game.Position;
 import com.woowa.woowago.domain.room.GameRoom;
+import com.woowa.woowago.dto.BlueSpotsResponse;
 import com.woowa.woowago.dto.GameStateResponse;
 import com.woowa.woowago.dto.ScoreResponse;
 import com.woowa.woowago.dto.websocket.JoinResponse;
@@ -138,6 +139,16 @@ public class GameRoomService {
         room.undo(username);
 
         return GameStateResponse.from(room.getGame());
+    }
+
+    /**
+     * 착수 추천 (KataGo 연동)
+     * @param gameId 방 ID
+     * @return BlueSpotsResponse
+     */
+    public BlueSpotsResponse blueSpots(String gameId) {
+        GameRoom room = getRoomOrThrow(gameId);
+        return kataGoService.getBlueSpots(room.getGame());
     }
 
     /**

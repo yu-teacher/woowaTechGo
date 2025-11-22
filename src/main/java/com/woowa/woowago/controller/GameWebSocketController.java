@@ -1,5 +1,6 @@
 package com.woowa.woowago.controller;
 
+import com.woowa.woowago.dto.BlueSpotsResponse;
 import com.woowa.woowago.dto.ErrorResponse;
 import com.woowa.woowago.dto.GameStateResponse;
 import com.woowa.woowago.dto.ScoreResponse;
@@ -80,6 +81,21 @@ public class GameWebSocketController {
         try {
             GameStateResponse response = roomService.undo(request.getGameId(), request.getUsername());
             GameMessage message = new GameMessage("UNDO", response, request.getUsername());
+            broadcastToRoom(request.getGameId(), message);
+        } catch (Exception e) {
+            sendError(request.getGameId(), request.getUsername(), e.getMessage());
+        }
+    }
+
+    /**
+     * 착수 추천 (모든 사용자에게 브로드캐스트)
+     * /app/game/bluespots
+     */
+    @MessageMapping("/game/bluespots")
+    public void recommendMove(GameActionRequest request) {
+        try {
+            BlueSpotsResponse response = roomService.blueSpots(request.getGameId());
+            GameMessage message = new GameMessage("BLUESPOTS", response, request.getUsername());
             broadcastToRoom(request.getGameId(), message);
         } catch (Exception e) {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
