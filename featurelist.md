@@ -341,3 +341,143 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 - [x] broadcastToRoom() - 메시지 전송
 - [x] sendError() - 에러 전송
 
+# 3차 기능 추가 - 요청/응답 시스템 & 연결 관리
+
+## 목표
+1. 게임 액션(시작/무르기/계가)에 상대방 동의 시스템 추가
+2. WebSocket 연결 끊김 감지 및 즉시 퇴장 처리
+
+---
+
+## 1. 새로운 도메인 객체 생성
+
+### 1.1. RequestType (Enum)
+- [ ] START - 게임 시작 요청
+- [ ] UNDO - 무르기 요청
+- [ ] SCORE - 계가 요청
+
+### 1.2. PendingRequest (Value Object)
+- [ ] type: RequestType 필드
+- [ ] requester: String 필드 (요청한 사람)
+- [ ] requestedAt: Instant 필드 (요청 시간)
+- [ ] isTimeout() - 30초 경과 여부 확인
+- [ ] getTargetPlayer(room) - 응답해야 할 사람 찾기
+- [ ] equals/hashCode 구현
+
+---
+
+## 2. GameRoom 리팩토링
+
+### 2.1. 필드 추가
+- [ ] pendingRequest: PendingRequest 필드
+
+### 2.2. 요청/응답 로직
+- [ ] createRequest(type, requester) - 요청 생성
+- [ ] hasPendingRequest() - 대기 중인 요청 있는지
+- [ ] acceptRequest(responder) - 요청 수락
+- [ ] rejectRequest(responder) - 요청 거절
+- [ ] clearRequest() - 요청 초기화
+- [ ] validateCanRequest(username, type) - 요청 가능 여부 검증
+- [ ] validateCanRespond(username) - 응답 가능 여부 검증
+
+### 2.3. 연결 관리 로직 (단순화)
+- [ ] handleDisconnect(username) - 방에서 사용자 제거
+
+---
+
+## 3. 새로운 DTO 생성
+
+### 3.1. RequestMessage
+- [ ] type: String 필드 (REQUEST_START, REQUEST_UNDO, REQUEST_SCORE)
+- [ ] requester: String 필드
+- [ ] message: String 필드 ("OOO님이 게임 시작을 요청했습니다")
+
+### 3.2. ResponseMessage
+- [ ] type: String 필드 (RESPOND_START, RESPOND_UNDO, RESPOND_SCORE)
+- [ ] responder: String 필드
+- [ ] accepted: boolean 필드
+
+### 3.3. DisconnectMessage
+- [ ] username: String 필드
+- [ ] message: String 필드 ("OOO님의 연결이 끊어졌습니다")
+
+---
+
+## 4. GameRoomService 리팩토링
+
+### 4.1. 요청 메서드 추가
+- [ ] requestStart(gameId, username) → RequestMessage 반환
+- [ ] requestUndo(gameId, username) → RequestMessage 반환
+- [ ] requestScore(gameId, username) → RequestMessage 반환
+
+### 4.2. 응답 메서드 추가
+- [ ] respondStart(gameId, username, accepted) → StartResponse or ErrorResponse
+- [ ] respondUndo(gameId, username, accepted) → GameStateResponse or ErrorResponse
+- [ ] respondScore(gameId, username, accepted) → ScoreResponse or ErrorResponse
+
+### 4.3. 연결 관리 메서드 (단순화)
+- [ ] handleDisconnect(gameId, username) → DisconnectMessage
+
+### 4.4. 기존 메서드 수정
+- [ ] start(gameId, username) 유지 (내부에서 바로 시작용)
+- [ ] undo(gameId, username) 유지 (내부에서 바로 무르기용)
+- [ ] score(gameId) 유지 (내부에서 바로 계가용)
+- [ ] 위 메서드들은 응답 accept 시 내부적으로 호출됨
+
+---
+
+## 5. GameWebSocketController 확장
+
+### 5.1. 요청 엔드포인트 추가
+- [ ] @MessageMapping("/game/request/start")
+- [ ] @MessageMapping("/game/request/undo")
+- [ ] @MessageMapping("/game/request/score")
+
+### 5.2. 응답 엔드포인트 추가
+- [ ] @MessageMapping("/game/respond/start")
+- [ ] @MessageMapping("/game/respond/undo")
+- [ ] @MessageMapping("/game/respond/score")
+
+### 5.3. 기존 엔드포인트 유지 (하위 호환)
+- [ ] @MessageMapping("/game/start") - 싱글 플레이용
+- [ ] @MessageMapping("/game/undo") - 싱글 플레이용
+- [ ] @MessageMapping("/game/score") - 싱글 플레이용
+
+---
+
+## 6. WebSocket 이벤트 리스너 생성
+
+### 6.1. WebSocketEventListener.java (새로 생성)
+- [ ] handleWebSocketDisconnectListener() - 연결 끊김 감지 → 방에서 제거
+
+### 6.2. WebSocketConfig 수정
+- [ ] ChannelInterceptor 추가 - username/gameId 세션 저장
+- [ ] preSend() 구현 - SUBSCRIBE 시 gameId 추출하여 저장
+
+---
+
+## 7. 타임아웃 스케줄러
+
+### 7.1. GameRoomScheduler.java (새로 생성)
+- [ ] @Scheduled(fixedRate = 10000) - 10초마다 체크
+- [ ] checkPendingRequests() - 요청 타임아웃 체크 (30초)
+- [ ] autoRejectTimeoutRequests() - 자동 거절 처리
+- [ ] broadcastTimeoutMessages() - 타임아웃 메시지 브로드캐스트
+
+---
+
+## 8. 메시지 타입 확장
+
+### 8.1. 새로운 메시지 타입
+```
+REQUEST_START       - 게임 시작 요청
+RESPOND_START       - 게임 시작 응답
+REQUEST_UNDO        - 무르기 요청
+RESPOND_UNDO        - 무르기 응답
+REQUEST_SCORE       - 계가 요청
+RESPOND_SCORE       - 계가 응답
+DISCONNECT          - 연결 끊김 알림
+TIMEOUT_REQUEST     - 요청 타임아웃
+```
+
+---
