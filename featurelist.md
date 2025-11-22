@@ -464,10 +464,10 @@ Controller의 도메인 로직을 Domain/Service 레이어로 이동하여 책�
 ## 7. 타임아웃 스케줄러
 
 ### 7.1. GameRoomScheduler.java (새로 생성)
-- [ ] @Scheduled(fixedRate = 10000) - 10초마다 체크
-- [ ] checkPendingRequests() - 요청 타임아웃 체크 (30초)
-- [ ] autoRejectTimeoutRequests() - 자동 거절 처리
-- [ ] broadcastTimeoutMessages() - 타임아웃 메시지 브로드캐스트
+- [x] @Scheduled(fixedRate = 10000) - 10초마다 체크
+- [x] checkPendingRequests() - 요청 타임아웃 체크 (30초)
+- [x] autoRejectTimeoutRequests() - 자동 거절 처리
+- [x] broadcastTimeoutMessages() - 타임아웃 메시지 브로드캐스트
 
 ---
 
