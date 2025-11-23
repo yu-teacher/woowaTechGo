@@ -152,13 +152,33 @@ public class GameRoomService {
     }
 
     /**
-     * 계가 (KataGo 연동)
+     * 형세 판단 (KataGo 연동) - 게임 계속
+     * @param gameId 방 ID
+     * @return ScoreResponse
+     */
+    public ScoreResponse analysis(String gameId) {
+        GameRoom room = getRoomOrThrow(gameId);
+
+        // KataGo로 점수 계산
+        return kataGoService.getScore(room.getGame());
+    }
+
+    /**
+     * 계가 (KataGo 연동) - 게임 종료
      * @param gameId 방 ID
      * @return ScoreResponse
      */
     public ScoreResponse score(String gameId) {
         GameRoom room = getRoomOrThrow(gameId);
-        return kataGoService.getScore(room.getGame());
+
+        // 1. KataGo로 점수 계산
+        ScoreResponse scoreResponse = kataGoService.getScore(room.getGame());
+
+        // 2. 게임 종료 처리
+        room.resetGame();
+        room.endGame();
+
+        return scoreResponse;
     }
 
     /**

@@ -73,6 +73,14 @@ public class GameRoom {
     }
 
     /**
+     * 게임 종료 (started = false)
+     */
+    public void endGame() {
+        this.started = false;
+        this.settings = null;
+    }
+
+    /**
      * 게임 시작 여부
      */
     public boolean isGameStarted() {

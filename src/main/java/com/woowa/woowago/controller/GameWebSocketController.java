@@ -85,9 +85,23 @@ public class GameWebSocketController {
             sendError(request.getGameId(), request.getUsername(), e.getMessage());
         }
     }
+    /**
+     * 형세 판단 (게임 계속)
+     * /app/game/analysis
+     */
+    @MessageMapping("/game/analysis")
+    public void analysis(GameActionRequest request) {
+        try {
+            ScoreResponse response = roomService.analysis(request.getGameId());
+            GameMessage message = new GameMessage("ANALYSIS", response, request.getUsername());
+            broadcastToRoom(request.getGameId(), message);
+        } catch (Exception e) {
+            sendError(request.getGameId(), request.getUsername(), e.getMessage());
+        }
+    }
 
     /**
-     * 계가 (모든 사용자에게 브로드캐스트) - 기존 방식 (하위 호환)
+     * 계가 (모든 사용자에게 브로드캐스트) - 게임 종료
      * /app/game/score
      */
     @MessageMapping("/game/score")
@@ -204,8 +218,7 @@ public class GameWebSocketController {
     }
 
     /**
-     * 계가 응답
-     * /app/game/respond/score
+     * 계가 응답 (수락 시 게임 종료)
      */
     @MessageMapping("/game/respond/score")
     public void respondScore(RespondRequest request) {
