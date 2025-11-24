@@ -37,7 +37,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // WebSocket 엔드포인트 등록
         registry.addEndpoint("/ws-game")
-                .setAllowedOriginPatterns("*")
+                .setAllowedOrigins(
+                        "http://192.168.0.4:3003",
+                        "http://varen.iptime.org:3003")
                 .withSockJS();
     }
 

@@ -1,6 +1,7 @@
 package com.woowa.woowago.client;
 
 import com.woowa.woowago.config.KataGoProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -10,7 +11,7 @@ import java.util.regex.Pattern;
 /**
  * KataGo와 GTP 프로토콜로 통신하는 클라이언트
  */
-@Component
+@Slf4j
 public class KataGoClient {
 
     private final KataGoProperties properties;
@@ -122,6 +123,7 @@ public class KataGoClient {
      */
     public String finalScore() throws IOException, InterruptedException {
         String response = sendCommand("kata-raw-nn 0", 3000);
+        log.info("===== kata-raw-nn 응답: [{}] =====", response);  // 로그 추가
         return parseKataScore(response);
     }
 
