@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 public class KataGoClient {
 
     private final KataGoProperties properties;
-
     private Process process;
     private BufferedReader reader;
     private BufferedWriter writer;
